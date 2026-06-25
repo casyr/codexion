@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 08:21:18 by yriffard          #+#    #+#             */
-/*   Updated: 2026/06/25 17:34:12 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/06/25 19:24:00 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,16 @@ int	monitoring_init(t_monitoring *monitor, pthread_mutex_t *monitor_mutex,
 
 int	coder_thread_creation(t_coder *coder_list, int coders_nb, pthread_t *coder_th)
 {
-	t_coder		coder;
-	int			coder_index;
+	t_coder			coder;
+	int				coder_index;
+	pthread_mutex_t	coder_mutex;
+	pthread_cond_t	coder_cond;
  
 	coder_index = 0;
 	while (coder_index < coders_nb)
 	{
+		pthread_mutex_init(&coder_mutex);
+		pthread_cond_init(&coder_cond);
 		coder.id = coder_index;
 		coder.state = "NOT FINISH";
 		if(pthread_create(&(coder_th[coder_index]), NULL, &coder_routine, &coder) != 0)
