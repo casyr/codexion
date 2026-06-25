@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 08:21:32 by yriffard          #+#    #+#             */
-/*   Updated: 2026/06/25 15:58:46 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/06/25 17:33:55 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,11 @@ int	parsing(int argc, char **argv)
 	return (0);
 }
 
-int	parsing_message(int argc, char **argv)
+void	parsing_message(int argc, char **argv)
 {
 	int	parsed_data;
 
-	parsed_data = parser(argc, argv);
+	parsed_data = parsing(argc, argv);
 	if (parsed_data == 1)
 		printf("the number of args isn't correct.");
 	if (parsed_data == 2)
@@ -61,5 +61,4 @@ int	parsing_message(int argc, char **argv)
 		printf("dongle cooldown didn't respect the format.");
 	if (parsed_data == 9)
 		printf("sheduler didn't respect the format."); 
-	return (parsed_data);
 }

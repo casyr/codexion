@@ -8,5 +8,6 @@
 
 # include "parser/parsing.h"
 # include "monitoring.h"
+# include "coder.h"
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 08:21:18 by yriffard          #+#    #+#             */
-/*   Updated: 2026/06/25 16:03:58 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/06/25 17:34:12 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	coder_thread_creation(t_coder *coder_list, int coders_nb, pthread_t *coder_t
 	{
 		coder.id = coder_index;
 		coder.state = "NOT FINISH";
-		if(pthread_create(&(coder_th[coder_index]), NULL, &routine, &coder) != 0)
+		if(pthread_create(&(coder_th[coder_index]), NULL, &coder_routine, &coder) != 0)
 		{
 			printf("coder %i thread CREATION fails\n", coder_index);
 			return (1);
@@ -115,8 +115,7 @@ int		main(int argc, char **argv)
 	t_coder			coder;
 	t_coder			*coder_list;
 
-	if (parsing(argc, argv) != 0)
-		return (-1);
+	parsing_message(argc, argv);
 	coders_nb = atoi(argv[1]);
 	compiling_nb = atoi(argv[6]);
 	if (coders_nb < 2)
