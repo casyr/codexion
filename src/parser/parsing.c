@@ -6,13 +6,13 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 08:21:32 by yriffard          #+#    #+#             */
-/*   Updated: 2026/06/23 12:06:24 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/06/25 15:58:46 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-int	parser(int argc, char **argv)
+int	parsing(int argc, char **argv)
 {
 	int	i;
 
@@ -36,4 +36,30 @@ int	parser(int argc, char **argv)
 	if (scheduler_checker(argv[8]) != 0)
 		return (9);
 	return (0);
+}
+
+int	parsing_message(int argc, char **argv)
+{
+	int	parsed_data;
+
+	parsed_data = parser(argc, argv);
+	if (parsed_data == 1)
+		printf("the number of args isn't correct.");
+	if (parsed_data == 2)
+		printf("numbers of coder didn't respect the format.");
+	if (parsed_data == 3)
+		printf("time to burnout didn't respect the format.");
+	if (parsed_data == 4)
+		printf("time to compile didn't respect the format.");
+	if (parsed_data == 5)
+		printf("time to debug didn't respect the format.");
+	if (parsed_data == 6)
+		printf("time to refactor didn't respect the format.");
+	if (parsed_data == 7)
+		printf("number of compiles required didn't respect the format.");
+	if (parsed_data == 8)
+		printf("dongle cooldown didn't respect the format.");
+	if (parsed_data == 9)
+		printf("sheduler didn't respect the format."); 
+	return (parsed_data);
 }

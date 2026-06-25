@@ -1,4 +1,8 @@
-#include "coder.h"
+#ifndef MONITORING_H
+# define MONITORING_H
+
+# include "coder.h"
+# include "routine/monitoring_routine/monitoring_routine.h"
 
 typedef struct monitor
 {
@@ -6,5 +10,7 @@ typedef struct monitor
 	long			time_to_burnout;
 	int				compiling_nb;
 	t_coder 		*coder_list;
-	pthread_mutex_t	mutex;
+	pthread_mutex_t	*mutex;
 } t_monitoring;
+
+#endif

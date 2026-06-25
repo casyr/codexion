@@ -6,42 +6,11 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 08:21:18 by yriffard          #+#    #+#             */
-/*   Updated: 2026/06/25 15:07:01 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/06/25 16:03:58 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
-
-int		parsing(int argc, char **argv)
-{
-	int	parsed_data;
-
-	parsed_data = parser(argc, argv);
-	if (parsed_data == 1)
-		printf("the number of args isn't correct.");
-	if (parsed_data == 2)
-		printf("numbers of coder didn't respect the format.");
-	if (parsed_data == 3)
-		printf("time to burnout didn't respect the format.");
-	if (parsed_data == 4)
-		printf("time to compile didn't respect the format.");
-	if (parsed_data == 5)
-		printf("time to debug didn't respect the format.");
-	if (parsed_data == 6)
-		printf("time to refactor didn't respect the format.");
-	if (parsed_data == 7)
-		printf("number of compiles required didn't respect the format.");
-	if (parsed_data == 8)
-		printf("dongle cooldown didn't respect the format.");
-	if (parsed_data == 9)
-		printf("sheduler didn't respect the format."); 
-	return (parsed_data);
-}
-
-void	*routine()
-{
-	printf("la\n");
-}
 
 long	ft_get_time()
 {
@@ -54,34 +23,9 @@ long	ft_get_time()
 	return (result);
 }
 
-void	*monitoring_routine(void* monitor)
-{
-	int 			compiling_counter;
-	long 			time;
-	struct timeval	current_time;
-	t_monitoring 	monitoring;
-	
-	monitoring = *(t_monitoring*)monitor;
-	while(1)
-	{
-		time = ft_get_time();
-		if (time == 1)
-		{
-			printf("gettimeofday fail in monitoring rountine");
-			break;
-		}
-		pthread_mutex_lock(&(monitoring.mutex));
-		// printf("%ld - %ld = %ld > %d \n", time, monitoring.last_compile, time - monitoring.last_compile, monitoring.time_to_burnout);
-		if (time - monitoring.last_compile > monitoring.time_to_burnout)
-		{
-			printf("BURNOUT!");
-			break;
-		}
-		pthread_mutex_unlock(&(monitoring.mutex));
-	}
-}
 
-int	monitoring_init(t_monitoring *monitor, pthread_mutex_t monitor_mutex,
+
+int	monitoring_init(t_monitoring *monitor, pthread_mutex_t *monitor_mutex,
 						char **argv, t_coder *coder_list)
 {
 	monitor->compiling_nb = atoi(argv[6]);
@@ -105,7 +49,7 @@ int	coder_thread_creation(t_coder *coder_list, int coders_nb, pthread_t *coder_t
 {
 	t_coder		coder;
 	int			coder_index;
-
+ 
 	coder_index = 0;
 	while (coder_index < coders_nb)
 	{
@@ -150,11 +94,11 @@ int	coder_thread_join(int coders_nb, pthread_t *coder_th)
 	return(0);
 }
 
-int monitor_thread_join(pthread_t *monitoring_th)
+int monitor_thread_join(pthread_t monitoring_th)
 {
-	if (pthread_join(*monitoring_th, NULL) != 0)
+	if (pthread_join(monitoring_th, NULL) != 0)
 	{
-		printf("monitoring th-1read JOIN fails\n");
+		printf("monitoring thread JOIN fails\n");
 		return (1);
 	}
 	return (0);
@@ -162,22 +106,19 @@ int monitor_thread_join(pthread_t *monitoring_th)
 
 int		main(int argc, char **argv)
 {
-	int 			parsed_data;
 	int 			coders_nb;
-	int 			coder_index;
 	int				compiling_nb;
 	pthread_t 		*coder_th;
 	pthread_t		monitoring_th;
 	pthread_mutex_t	monitor_mutex;
 	t_monitoring	monitor;
 	t_coder			coder;
-	struct timeval	current_time;
 	t_coder			*coder_list;
 
-	parsed_data = parsing(argc, argv);
-	if (parsed_data != 0)
+	if (parsing(argc, argv) != 0)
 		return (-1);
 	coders_nb = atoi(argv[1]);
+	compiling_nb = atoi(argv[6]);
 	if (coders_nb < 2)
 	{
 		printf("number of coders must be > 1");
@@ -189,23 +130,23 @@ int		main(int argc, char **argv)
 		return (1);
 	}
 	coder_th = malloc(coders_nb * sizeof(pthread_t));
-	if (!coder_th)
+	coder_list = malloc(sizeof(coder) * coders_nb);
+	if (!coder_th || !coder_list)
 	{
 		printf("malloc fails");
 		return (1);
 	}
-	coder_list = malloc(sizeof(coder) * coders_nb);
 	if(coder_thread_creation(coder_list, coders_nb, coder_th) != 0)
 		return (1);
-	if(monitoring_init(&monitor, monitor_mutex, argv, coder_list) != 0)
-		return (2);
 	if (pthread_mutex_init(&monitor_mutex, NULL) !=0)
+		return (2);
+	if(monitoring_init(&monitor, &monitor_mutex, argv, coder_list) != 0)
 		return (3);
 	if(monitoring_thread_creation(monitor, &monitoring_th) != 0)
 		return (4);
 	if (coder_thread_join(coders_nb, coder_th) != 0)
 		return (5);
-	if (monitor_thread_join(&monitoring_th) != 0)
+	if (monitor_thread_join(monitoring_th) != 0)
 		return (6);
 	if (pthread_mutex_destroy(&monitor_mutex) != 0)
 		return (7);
