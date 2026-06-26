@@ -2,11 +2,13 @@
 # define CODER_H
 
 # include "routine/coder_routine/coder_routine.h"
+# include <pthread.h>
 
 typedef struct coder
 {
-	char	*state;
-	int		id;
+	char			*status;
+	int				id;
+	pthread_mutex_t	*mutex;
 } t_coder;
 
 #endif

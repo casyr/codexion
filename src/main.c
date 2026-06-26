@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 08:21:18 by yriffard          #+#    #+#             */
-/*   Updated: 2026/06/25 19:24:00 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/06/26 15:28:59 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ long	ft_get_time()
 }
 
 
-
 int	monitoring_init(t_monitoring *monitor, pthread_mutex_t *monitor_mutex,
 						char **argv, t_coder *coder_list)
 {
@@ -37,6 +36,7 @@ int	monitoring_init(t_monitoring *monitor, pthread_mutex_t *monitor_mutex,
 		return (1);
 	}
 	monitor->time_to_burnout = atoi(argv[2]);
+	monitor->coder_nb = atoi(argv[1]);
 	return (0);
 }
 
@@ -45,7 +45,7 @@ int	monitoring_init(t_monitoring *monitor, pthread_mutex_t *monitor_mutex,
 	
 // }
 
-int	coder_thread_creation(t_coder *coder_list, int coders_nb, pthread_t *coder_th)
+int	coder_thread_creation(t_coder *coder_list, int coders_nb, pthread_t *coder_th, t_monitoring *monitor)
 {
 	t_coder			coder;
 	int				coder_index;
@@ -53,31 +53,43 @@ int	coder_thread_creation(t_coder *coder_list, int coders_nb, pthread_t *coder_t
 	pthread_cond_t	coder_cond;
  
 	coder_index = 0;
+	pthread_mutex_init(&coder_mutex, NULL);
+	pthread_cond_init(&coder_cond, NULL);
+	monitor->coder_cond = &coder_cond;
 	while (coder_index < coders_nb)
 	{
-		pthread_mutex_init(&coder_mutex);
-		pthread_cond_init(&coder_cond);
+
 		coder.id = coder_index;
-		coder.state = "NOT FINISH";
-		if(pthread_create(&(coder_th[coder_index]), NULL, &coder_routine, &coder) != 0)
+		coder.status = "NOT FINISH";
+		if (pthread_create(&(coder_th[coder_index]), NULL, &coder_routine, &coder) != 0)
 		{
 			printf("coder %i thread CREATION fails\n", coder_index);
 			return (1);
 		}
+		
+		
 		coder_list[coder_index].id = coder_index;
-		coder_list[coder_index].state = coder.state;
+		coder_list[coder_index].status = coder.status;
 		coder_index++;
 	}
+	pthread_mutex_destroy(&coder_mutex);
+	pthread_cond_destroy(&coder_cond);
 	return (0);
 }
 
-int	monitoring_thread_creation(t_monitoring monitor, pthread_t *monitoring_th)
+int	monitoring_thread_creation(t_monitoring *monitor, pthread_t *monitoring_th)
 {
+	pthread_cond_t	monitoring_cond;
+
+	monitor->monitor_cond = &monitoring_cond;
+	pthread_cond_init(&monitoring_cond, NULL);
 	if (pthread_create(monitoring_th, NULL, &monitoring_routine, &monitor) != 0)
 	{
 		printf("monitoring thread CREATION fails");
 		return (1);
 	}
+	pthread_cond_destroy(&monitoring_cond);
+
 	return (0);
 }
 
@@ -108,6 +120,27 @@ int monitor_thread_join(pthread_t monitoring_th)
 	return (0);
 }
 
+t_coder	*create_coder_list(int coders_nb)
+{
+	t_coder			*coder_list;
+	pthread_mutex_t	coder_mutex;
+	int				coder_index;
+
+	coder_list = malloc(sizeof(t_coder) * coders_nb);
+	if (!coder_list)
+		return (NULL);
+	while (coder_index < coders_nb - 1)
+	{
+		if (pthread_mutex_init(&coder_mutex, NULL) != 0)
+			return (NULL);
+		coder_list[coder_index].id = coder_index;
+		coder_list[coder_index].status = "init";
+		coder_list[coder_index].mutex = &coder_mutex;
+		coder_index++;
+	}
+	
+}
+
 int		main(int argc, char **argv)
 {
 	int 			coders_nb;
@@ -133,19 +166,27 @@ int		main(int argc, char **argv)
 		return (1);
 	}
 	coder_th = malloc(coders_nb * sizeof(pthread_t));
-	coder_list = malloc(sizeof(coder) * coders_nb);
+	coder_list = create_coder_list(coders_nb);
 	if (!coder_th || !coder_list)
 	{
 		printf("malloc fails");
 		return (1);
 	}
-	if(coder_thread_creation(coder_list, coders_nb, coder_th) != 0)
+	creer tous les dongles
+	finis l initialisation de codeur
+	creer monitor
+
+	lance monitor + lance routine pour chaques codeurs
+	join monitor + join routine pour chaques codeurs
+	free tout
+	
+	if(coder_thread_creation(coder_list, coders_nb, coder_th, &monitor) != 0)
 		return (1);
 	if (pthread_mutex_init(&monitor_mutex, NULL) !=0)
 		return (2);
 	if(monitoring_init(&monitor, &monitor_mutex, argv, coder_list) != 0)
 		return (3);
-	if(monitoring_thread_creation(monitor, &monitoring_th) != 0)
+	if(monitoring_thread_creation(&monitor, &monitoring_th) != 0)
 		return (4);
 	if (coder_thread_join(coders_nb, coder_th) != 0)
 		return (5);

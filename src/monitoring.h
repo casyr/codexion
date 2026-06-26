@@ -11,7 +11,12 @@ typedef struct monitor
 	long			time_to_burnout;
 	int				compiling_nb;
 	t_coder 		*coder_list;
+	int				coder_nb;
+
+	char			*status;
 	pthread_mutex_t	*mutex;
+	pthread_cond_t	*monitor_cond;
+	pthread_cond_t	*coder_cond;
 } t_monitoring;
 
 #endif

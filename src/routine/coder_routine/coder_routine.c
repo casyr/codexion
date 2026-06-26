@@ -6,13 +6,13 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/25 16:04:18 by yriffard          #+#    #+#             */
-/*   Updated: 2026/06/25 17:52:02 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/06/26 11:59:25 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "coder_routine.h"
 
-void	*coder_routine()
+void	*coder_routine(t_coder coder)
 {
 	printf("la\n");
 }
