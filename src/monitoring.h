@@ -14,8 +14,9 @@ typedef struct monitor
 	int				coder_nb;
 
 	char			*status;
-	pthread_mutex_t	*mutex;
+	pthread_mutex_t	*monitor_mutex;
 	pthread_cond_t	*monitor_cond;
+	pthread_mutex_t	*coder_mutex;
 	pthread_cond_t	*coder_cond;
 } t_monitoring;
 
