@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 08:21:18 by yriffard          #+#    #+#             */
-/*   Updated: 2026/07/02 12:01:26 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/07/02 13:33:03 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,12 +111,13 @@ int	coder_th_creation_and_join(t_coder *coder_list, int coders_nb, pthread_t *co
 	monitor->coder_cond = &coder_cond;
 	while (coder_index < coders_nb - 1)
 	{
-		if (pthread_create(&(coder_th[coder_index]), NULL, &coder_routine, (void*)(coder_list[coder_index]) != 0))
+		if (pthread_create(&(coder_th[coder_index]), NULL, &coder_routine, &(coder_list[coder_index])) != 0)
 		{
 			printf("coder %i thread CREATION fails\n", coder_index);
 			return (1);
 		}
-		// coder_list[coder_index]->status = "READY";
+		coder_index++;
+		coder_list[coder_index]->status = "READY";
 	}
 	while (strcmp(monitor->status, "READY") != 0)
 		pthread_cond_wait(&coder_cond, &coder_mutex);
