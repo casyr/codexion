@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/25 16:02:13 by yriffard          #+#    #+#             */
-/*   Updated: 2026/06/29 13:34:22 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/07/02 10:38:37 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,18 +35,12 @@ void	*monitoring_routine(void* monitor)
 			printf("BURNOUT!");
 			break;
 		}
-		while (coder_are_ready(monitoring) == 0)
-		{
-			pthread_cond_wait(monitoring.monitor_cond, monitoring.monitor_mutex);
-		}
-		monitoring.status = "ready";
-		pthread_cond_broadcast(monitoring.coder_cond);
 		pthread_mutex_unlock(monitoring.monitor_mutex);
 	}
 	return (monitoring.monitor_mutex);
 }
 
 
-thread cree -> est ce que ton id est N ?
-si non -> condwait
-else ->  coders_are_ready to ok + 
+// thread cree -> est ce que ton id est N ?
+// si non -> condwait
+// else ->  coders_are_ready to ok + 

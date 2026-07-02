@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 08:21:18 by yriffard          #+#    #+#             */
-/*   Updated: 2026/07/02 10:02:21 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/07/02 12:01:26 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,15 +41,30 @@ int	monitoring_init(t_monitoring *monitor, char **argv, t_coder *coder_list)
 		return (4);
 	monitor->compiling_nb = atoi(argv[6]);
 	monitor->last_compile = ft_get_time();
-	monitor->monitor_mutex = &monitor_mutex;
 	if (monitor->last_compile == 1)
 		return (3);
 	monitor->time_to_burnout = atoi(argv[2]);
 	monitor->coder_nb = atoi(argv[1]);
 	monitor->status = "INIT";
+	monitor->monitor_cond = malloc(sizeof(pthread_cond_t));
+	if (!monitor->monitor_cond)
+		return (5);
 	monitor->monitor_cond = &monitor_cond;
+
+	monitor->coder_cond = malloc(sizeof(pthread_cond_t));
+	if (!monitor->coder_cond)
+		return (6);
 	monitor->coder_cond = &coder_cond;
+
+	monitor->coder_mutex =  malloc(sizeof(pthread_mutex_t));
+	if (!monitor->coder_mutex)
+		return (7);	
 	monitor->coder_mutex = &coder_mutex;
+
+	monitor->monitor_mutex = malloc(sizeof(pthread_mutex_t));
+	if (!monitor->monitor_mutex)
+		return (8);	
+	monitor->monitor_mutex = &monitor_mutex;
 	return (0);
 }
 
@@ -94,15 +109,14 @@ int	coder_th_creation_and_join(t_coder *coder_list, int coders_nb, pthread_t *co
 	coder_index = 0;
 	pthread_cond_init(&coder_cond, NULL);
 	monitor->coder_cond = &coder_cond;
-	while (coder_index < coders_nb)
+	while (coder_index < coders_nb - 1)
 	{
-		if (pthread_create(&(coder_th[coder_index]), NULL, &coder_routine, &coder_list[coder_index]) != 0)
+		if (pthread_create(&(coder_th[coder_index]), NULL, &coder_routine, (void*)(coder_list[coder_index]) != 0))
 		{
 			printf("coder %i thread CREATION fails\n", coder_index);
 			return (1);
 		}
-		coder_list[coder_index] -> status = "READY";
-		pthread_cond_signal(monitor->monitor_cond);
+		// coder_list[coder_index]->status = "READY";
 	}
 	while (strcmp(monitor->status, "READY") != 0)
 		pthread_cond_wait(&coder_cond, &coder_mutex);
@@ -118,10 +132,11 @@ int		coder_are_ready(t_coder *coder_list, int coder_nb)
 
 	count = 0;
 	i = 0;
-	while (i < coder_nb)
+	while (i < coder_nb - 1)
 	{
 		if (strcmp(coder_list[i].status, "ready") == 0)
 			count += 1;
+		i++;
 	}
 	if (count == coder_nb)
 		return (1);
@@ -130,15 +145,13 @@ int		coder_are_ready(t_coder *coder_list, int coder_nb)
 
 int	monitoring_th_creation_and_join(t_monitoring *monitor, pthread_t *monitoring_th, t_coder *coder_list, int coders_nb)
 {
-	if (pthread_create(monitoring_th, NULL, &monitoring_routine, &monitor) != 0)
+	if (pthread_create(monitoring_th, NULL, &monitoring_routine, monitor) != 0)
 	{
 		printf("monitoring thread CREATION fails");
 		return (1);
 	}
 	while (coder_are_ready(coder_list, coders_nb) != 1)
-	{
 		pthread_cond_wait(monitor->monitor_cond, monitor->monitor_mutex);
-	}
 	pthread_cond_broadcast(monitor->coder_cond);
 	monitor_thread_join(*monitoring_th);
 	pthread_cond_destroy(monitor->monitor_cond);
@@ -156,6 +169,7 @@ t_coder	*coder_list_init(int coders_nb)
 	coder_list = malloc(sizeof(t_coder) * coders_nb);
 	if (!coder_list)
 		return (NULL);
+	coder_index = 0;
 	while (coder_index < coders_nb - 1)
 	{
 		if (pthread_mutex_init(&coder_mutex, NULL) != 0)
@@ -165,8 +179,9 @@ t_coder	*coder_list_init(int coders_nb)
 		coder_list[coder_index].mutex = &coder_mutex;
 		coder_index++;
 	}
+	return (coder_list);
 }
-
+ 
 int		main(int argc, char **argv)
 {
 	int 			coders_nb;
@@ -200,16 +215,16 @@ int		main(int argc, char **argv)
 	}
 	if(monitoring_init(&monitor, argv, coder_list) != 0)
 		return (4);
-	if(monitoring_th_creation_and_join(&monitor, &monitoring_th, coder_list, coders_nb) != 0)
-		return (5);
 	if(coder_th_creation_and_join(coder_list, coders_nb, coder_th, &monitor) != 0)
 		return (6);
+	if(monitoring_th_creation_and_join(&monitor, &monitoring_th, coder_list, coders_nb) != 0)
+		return (5);
 	return (0);
 }
 
 	// creer tous les dongles
 	// finis l initialisation de codeur
-// 	// creer monitor
+	// 	// creer monitor
 
 	// lance monitor + lance routine pour chaques codeurs
 	// // join monitor + join routine pour chaques codeurs
