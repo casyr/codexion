@@ -5,6 +5,8 @@
 # include "routine/monitoring_routine/monitoring_routine.h"
 # include <pthread.h>
 
+typedef struct coder t_coder;
+
 typedef struct monitor
 {
 	long			last_compile;

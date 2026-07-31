@@ -7,6 +7,6 @@
 
 // parsing.c
 int		parsing(int argc, char **argv);
-void	parsing_message(int argc, char **argv);
+int	parsing_message(int argc, char **argv);
 
 #endif

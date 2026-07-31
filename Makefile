@@ -1,7 +1,7 @@
 NAME = codexion
-CC = cc
+CC = gcc
 # CFLAGS = -Wall -Wextra -Werror -MMD -MP -g
-CFLAGS = -g
+CFLAGS = -g #-fsanitize=address -pthread
 BIN_DIR = src/.bin
 
 CHECKERS = src/parser/checkers
@@ -20,7 +20,6 @@ OBJ = $(patsubst %.c, $(BIN_DIR)/%.o , $(SRC))
 DEP = $(patsubst %.c, $(BIN_DIR)/%.d, $(SRC))
 
 all : $(NAME)
-# -g to del below
 $(NAME) : $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) -o $@ 
 
