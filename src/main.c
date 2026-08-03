@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 08:21:18 by yriffard          #+#    #+#             */
-/*   Updated: 2026/07/31 13:38:12 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/03 17:31:25 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,44 +24,39 @@ long	ft_get_time()
 }
 
 
-int	monitoring_init(t_monitoring *monitor, char **argv)
+t_monitoring	*monitoring_init(char **argv)
 {
 	pthread_mutex_t	monitor_mutex;
 	pthread_cond_t	monitor_cond;
 	pthread_mutex_t	coder_mutex;
 	pthread_cond_t	coder_cond;
+	t_monitoring *monitor = malloc(sizeof(t_monitoring));
 
-	if (pthread_mutex_init(&coder_mutex, NULL) != 0)
-		return(1);
-	if (pthread_mutex_init(&monitor_mutex, NULL) !=0)
-		return (2);
-	if (pthread_cond_init(&coder_cond, NULL) != 0)
-		return (3);
-	if (pthread_cond_init(&monitor_cond, NULL) != 0)
-		return (4);
+    if (!monitor)
+        return (NULL);
+
+    monitor->monitor_mutex = malloc(sizeof(pthread_mutex_t));
+    monitor->coder_mutex = malloc(sizeof(pthread_mutex_t));
+    monitor->monitor_cond = malloc(sizeof(pthread_cond_t));
+    monitor->coder_cond = malloc(sizeof(pthread_cond_t));
+
+    if (!monitor->monitor_mutex || !monitor->coder_mutex || 
+        !monitor->monitor_cond || !monitor->coder_cond)
+        return (NULL);
+
+    pthread_mutex_init(monitor->monitor_mutex, NULL);
+    pthread_mutex_init(monitor->coder_mutex, NULL);
+    pthread_cond_init(monitor->monitor_cond, NULL);
+    pthread_cond_init(monitor->coder_cond, NULL);
 	monitor->compiling_nb = atoi(argv[6]);
 	monitor->last_compile = ft_get_time();
 	if (monitor->last_compile == 1)
-		return (3);
+		return (NULL);
 	monitor->time_to_burnout = atoi(argv[2]);
 	monitor->coder_nb = atoi(argv[1]);
 	monitor->status = "INIT";
-	if (!monitor->monitor_cond)
-		return (5);
-	monitor->monitor_cond = &monitor_cond;
-
-	if (!monitor->coder_cond)
-		return (6);
-	monitor->coder_cond = &coder_cond;
-
-	if (!monitor->coder_mutex)
-		return (7);	
-	monitor->coder_mutex = &coder_mutex;
-
-	if (!monitor->monitor_mutex)
-		return (8);	
-	monitor->monitor_mutex = &monitor_mutex;
-	return (0);
+	// printf("m cond: %p, c cond %p, coder m %p, monitor m %p", monitor->monitor_cond, monitor->coder_cond, monitor->coder_mutex, monitor->monitor_mutex);
+	return (monitor);
 }
 
 // void coder_init(t_coder *coder)
@@ -99,15 +94,13 @@ int monitor_thread_join(pthread_t monitoring_th)
 int	coder_th_creation(t_coder *coder_list, int coders_nb, pthread_t *coder_th, t_monitoring *monitor)
 {
 	int				coder_index;
-	pthread_mutex_t	coder_mutex;
 	pthread_cond_t	coder_cond;
 
 	coder_index = 0;
-	pthread_cond_init(&coder_cond, NULL);
 	monitor->coder_cond = &coder_cond;
 	while (coder_index < coders_nb)
 	{
-		// pthread_mutex_lock(monitor->monitor_mutex);
+		printf("coder %i create\n", coder_index + 1);
 		if (pthread_create(&(coder_th[coder_index]), NULL, &coder_routine, &(coder_list[coder_index])) != 0)
 		{
 			printf("coder %i thread CREATION fails\n", coder_index);
@@ -115,10 +108,7 @@ int	coder_th_creation(t_coder *coder_list, int coders_nb, pthread_t *coder_th, t
 		}
 		coder_list[coder_index].status = "READY";
 		coder_index++;
-		// pthread_mutex_unlock(monitor->monitor_mutex);
 	}
-	pthread_mutex_destroy(&coder_mutex);
-	pthread_cond_destroy(&coder_cond);
 	return (0);
 }
 int		coder_are_ready(t_coder *coder_list, int coder_nb)
@@ -135,7 +125,7 @@ int		coder_are_ready(t_coder *coder_list, int coder_nb)
 		i++;
 	}
 	
-	printf("%d / %d\n", count, coder_nb);
+	// printf("%d / %d\n", count, coder_nb);
 	if (count == coder_nb)
 		return (1);
 	return (0);
@@ -144,7 +134,7 @@ int		coder_are_ready(t_coder *coder_list, int coder_nb)
 int	monitoring_th_creation(t_monitoring *monitor, pthread_t monitoring_th, t_coder *coder_list, int coders_nb)
 {
 
-	if (pthread_create(&monitoring_th, NULL, &monitoring_routine, &monitor) != 0)
+	if (pthread_create(&monitoring_th, NULL, &monitoring_routine, monitor) != 0)
 	{
 		printf("monitoring thread CREATION fails");
 		return (1);
@@ -156,11 +146,8 @@ int	monitoring_th_creation(t_monitoring *monitor, pthread_t monitoring_th, t_cod
 		printf("WAITING");
 	}
 	monitor->status = "READY";
-	printf("READY");
+	printf("READY\n");
 	pthread_cond_broadcast(monitor->coder_cond);
-	pthread_cond_destroy(monitor->monitor_cond);
-	pthread_cond_destroy(monitor->coder_cond);
-	pthread_mutex_destroy(monitor->coder_mutex);
 	pthread_mutex_unlock(monitor->monitor_mutex);
 	return (0);
 }
@@ -179,7 +166,7 @@ t_coder	*coder_list_init(int coders_nb, t_monitoring *monitor)
 	{
 		if (pthread_mutex_init(&coder_mutex, NULL) != 0)
 			return (NULL);
-		coder_list[coder_index].id = coder_index;
+		coder_list[coder_index].id = coder_index + 1;
 		coder_list[coder_index].status = "init";
 		coder_list[coder_index].mutex = &coder_mutex;
 		coder_list[coder_index].monitor = monitor;
@@ -195,7 +182,7 @@ int		main(int argc, char **argv)
 	pthread_t 		*coder_th;
 	pthread_t		monitoring_th;
 
-	t_monitoring	monitor;
+	t_monitoring	*monitor;
 	t_coder			coder;
 	t_coder			*coder_list;
 
@@ -216,22 +203,32 @@ int		main(int argc, char **argv)
 	}
 	coder_th = malloc(coders_nb * sizeof(pthread_t));
 
-	if (!coder_th || !coder_list)
+	if (!coder_th)
 	{
 		printf("malloc fails");
 		return (3);
 	}
-	if(monitoring_init(&monitor, argv) != 0)
+	monitor = monitoring_init(argv);
+	if(!monitor)
+	{
+		printf("error alloc monitor");
 		return (4);
-	coder_list = coder_list_init(coders_nb, &monitor);
-	if(coder_th_creation(coder_list, coders_nb, coder_th, &monitor) != 0)
-		return (6);
-	if(monitoring_th_creation(&monitor, monitoring_th, coder_list, coders_nb) != 0)
+	}
+	coder_list = coder_list_init(coders_nb, monitor);
+	if (!coder_list)
 		return (5);
+	if(coder_th_creation(coder_list, coders_nb, coder_th, monitor) != 0)
+		return (6);
+	if(monitoring_th_creation(monitor, monitoring_th, coder_list, coders_nb) != 0)
+		return (7);
 	coder_thread_join(coders_nb, coder_th);
+	pthread_join(monitoring_th, NULL);
+	pthread_cond_destroy(monitor->monitor_cond);
+	pthread_cond_destroy(monitor->coder_cond);
+	pthread_mutex_destroy(monitor->coder_mutex);
 	free(coder_th);
 	free(coder_list);
-	pthread_join(monitoring_th, NULL);
+	free(monitor);
 
 	return (0);
 }
