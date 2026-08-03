@@ -6,19 +6,19 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 08:21:18 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/03 18:18:06 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/03 18:38:25 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 
 
-void free_monitoring(void *monitor)
+void free_monitoring(t_monitoring *monitor)
 {
-	free(monitor.coder_mutex);
-	free(monitor.coder_cond);
-	free(monitor.monitor_mutex);
-	free(monitor.monitor_cond);
+	free(&(monitor->coder_mutex));
+	free(&(monitor->coder_cond));
+	free(&(monitor->monitor_mutex));
+	free(&(monitor->monitor_cond));
 	free(monitor);
 }
  
