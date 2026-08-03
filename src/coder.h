@@ -15,4 +15,7 @@ typedef struct coder
 	t_monitoring	*monitor;
 } t_coder;
 
+int		coder_thread_join(int coders_nb, pthread_t *coder_th);
+t_coder	*coder_list_init(int coders_nb, t_monitoring *monitor);
+
 #endif
