@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/04 09:05:08 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/04 15:47:13 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/04 17:16:38 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ t_monitoring	*monitoring_init(char **argv, t_coder *coder_list)
 
     monitor->monitor_mutex = malloc(sizeof(pthread_mutex_t));
     monitor->monitor_cond = malloc(sizeof(pthread_cond_t));
-	monitor->coder_list = malloc(sizeof(t_coder) * monitor->coders_nb);
+	// monitor->coder_list = malloc(sizeof(t_coder) * monitor->coders_nb);
 
     if (!monitor->monitor_mutex || !monitor->monitor_cond )
         return (NULL);

@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 08:21:18 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/04 17:03:09 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/04 17:14:47 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,6 @@ int		main(int argc, char **argv)
 	free(coder_th);
 	free_monitoring(monitor);
 	free(coder_list);
-	
 	return (0);
 }
 

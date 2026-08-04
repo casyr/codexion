@@ -1,7 +1,7 @@
 NAME = codexion
 CC = gcc
 # CFLAGS = -Wall -Wextra -Werror -MMD -MP -g
-CFLAGS = -g -fsanitize=address -pthread
+CFLAGS = -g #-fsanitize=address -pthread
 BIN_DIR = src/.bin
 
 CHECKERS = src/parser/checkers

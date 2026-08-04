@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/25 16:02:13 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/04 16:18:29 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/04 17:46:04 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,15 @@ void	*monitoring_routine(void* monitoring)
 	{	
 		// printf("CAR: %d\n", coder_are_ready(monitor->coder_list, monitor->coders_nb));
 
-		// printf("WAITING");
+		printf("monitor is waiting\n");
 		pthread_cond_wait(monitor->monitor_cond, monitor->monitor_mutex);
+		printf("monitor finish waiting\n");
 	}
+	monitor->status = "READY";
+	pthread_cond_broadcast(monitor->monitor_cond);
 	while(1)
 	{
-		pthread_cond_broadcast(monitor->monitor_cond);
 		time = ft_get_time();
-		// printf("wtf");
 		if (time == 1)
 		{
 			printf("gettimeofday fail in monitor rountine");
