@@ -4,6 +4,6 @@
 # include "stdio.h"
 
 long	ft_get_time();
-void	*coder_routine();
+void	*coder_routine(void *v_coder);
 
 #endif

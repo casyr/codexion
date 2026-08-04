@@ -11,7 +11,6 @@ typedef struct coder
 {
 	char			*status;
 	int				id;
-	pthread_mutex_t	*mutex;
 	t_monitoring	*monitor;
 } t_coder;
 

@@ -3,6 +3,8 @@
 # include "../../monitoring.h"
 # include "sys/time.h"
 # include <string.h>
+# include <unistd.h>
 void	*monitoring_routine(void* monitor);
+
 
 #endif

@@ -6,42 +6,51 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/25 16:02:13 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/03 16:51:38 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/04 16:18:29 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "monitoring_routine.h"
 
-void	*monitoring_routine(void* monitor)
+
+void	*monitoring_routine(void* monitoring)
 {
 	int 			compiling_counter;
 	long 			time;
 	struct timeval	current_time; 
-	t_monitoring 	*monitoring;
+	t_monitoring 	*monitor;
 
-	monitoring = (t_monitoring*)monitor;
+	printf("monitoring thread is created\n");
+	monitor = (t_monitoring*)monitoring;
+	pthread_mutex_lock(monitor->monitor_mutex);
+
+	while (strcmp(monitor->status, "READY") != 0)
+	{	
+		// printf("CAR: %d\n", coder_are_ready(monitor->coder_list, monitor->coders_nb));
+
+		// printf("WAITING");
+		pthread_cond_wait(monitor->monitor_cond, monitor->monitor_mutex);
+	}
 	while(1)
 	{
+		pthread_cond_broadcast(monitor->monitor_cond);
 		time = ft_get_time();
+		// printf("wtf");
 		if (time == 1)
 		{
-			printf("gettimeofday fail in monitoring rountine");
+			printf("gettimeofday fail in monitor rountine");
+			pthread_mutex_unlock(monitor->monitor_mutex);
 			break;
 		}
 		// printf("\n%p\n",  monitoring->monitor_mutex);
-		pthread_mutex_lock(monitoring->monitor_mutex);
 		// printf("%ld - %ld = %ld > %d \n", time, monitoring.last_compile, time - monitoring.last_compile, monitoring.time_to_burnout);
-		if (time - monitoring->last_compile > monitoring->time_to_burnout)
+		if (time - monitor->last_compile > monitor->time_to_burnout)
 		{
 			printf("BURNOUT!");
 			break;
 		}
-		pthread_mutex_unlock(monitoring->monitor_mutex);
+		pthread_mutex_unlock(monitor->monitor_mutex);
+		usleep(1000);
 	}
-	return (monitoring->monitor_mutex);
+	return (NULL);
 }
-
-
-// thread cree -> est ce que ton id est N ?
-// si non -> condwait
-// else ->  coders_are_ready to ok + 

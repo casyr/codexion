@@ -1,7 +1,7 @@
 NAME = codexion
 CC = gcc
 # CFLAGS = -Wall -Wextra -Werror -MMD -MP -g
-CFLAGS = -g #-fsanitize=address -pthread
+CFLAGS = -g -fsanitize=address -pthread
 BIN_DIR = src/.bin
 
 CHECKERS = src/parser/checkers
@@ -14,7 +14,10 @@ PARSING_FILE = src/parser/parsing.c \
 SRC = $(PARSING_FILE) \
 		src/main.c \
 		src/routine/coder_routine/coder_routine.c \
-		src/routine/monitoring_routine/monitoring_routine.c
+		src/routine/monitoring_routine/monitoring_routine.c \
+		src/monitor_init.c \
+		src/coder_init.c \
+		src/utils.c
 
 OBJ = $(patsubst %.c, $(BIN_DIR)/%.o , $(SRC))
 DEP = $(patsubst %.c, $(BIN_DIR)/%.d, $(SRC))
