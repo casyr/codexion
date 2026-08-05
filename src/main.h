@@ -9,6 +9,7 @@
 # include "parser/parsing.h"
 # include "monitoring.h"
 # include "coder.h"
+# include "dongle.h"
 
 
 #endif

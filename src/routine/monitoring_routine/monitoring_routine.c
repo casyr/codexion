@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/25 16:02:13 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/04 17:46:04 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/05 11:56:45 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	*monitoring_routine(void* monitoring)
 		// printf("%ld - %ld = %ld > %d \n", time, monitoring.last_compile, time - monitoring.last_compile, monitoring.time_to_burnout);
 		if (time - monitor->last_compile > monitor->time_to_burnout)
 		{
-			printf("BURNOUT!");
+			monitor->status = "BURNOUT";
 			break;
 		}
 		pthread_mutex_unlock(monitor->monitor_mutex);

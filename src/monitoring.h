@@ -7,6 +7,7 @@
 # include <stdlib.h>
 
 typedef struct coder t_coder;
+typedef struct s_dongle t_dongle;
 
 typedef struct monitor
 {
@@ -19,12 +20,13 @@ typedef struct monitor
 	char			*status;
 	pthread_mutex_t	*monitor_mutex;
 	pthread_cond_t	*monitor_cond;
+	t_dongle		*dongle_list;
 } t_monitoring;
 
 int				monitoring_th_creation(t_monitoring *monitor, pthread_t *monitoring_th, t_coder *coder_list, int coders_nb);
 int				coder_th_creation(t_coder *coder_list, int coders_nb, pthread_t *coder_th, t_monitoring *monitor);
 int 			monitor_thread_join(pthread_t monitoring_th);
-t_monitoring	*monitoring_init(char **argv, t_coder *coder_list);
+t_monitoring	*monitoring_init(char **argv, t_coder *coder_list, t_dongle *dongle_list);
 long			ft_get_time();
 int				coder_are_ready(t_coder *coder_list, int coder_nb);
 

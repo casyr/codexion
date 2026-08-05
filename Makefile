@@ -17,7 +17,8 @@ SRC = $(PARSING_FILE) \
 		src/routine/monitoring_routine/monitoring_routine.c \
 		src/monitor_init.c \
 		src/coder_init.c \
-		src/utils.c
+		src/utils.c \
+		src/dongle_init.c
 
 OBJ = $(patsubst %.c, $(BIN_DIR)/%.o , $(SRC))
 DEP = $(patsubst %.c, $(BIN_DIR)/%.d, $(SRC))

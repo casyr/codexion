@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/04 09:05:08 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/04 17:16:38 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/05 11:29:23 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int monitor_thread_join(pthread_t monitoring_th)
 	return (0);
 }
 
-t_monitoring	*monitoring_init(char **argv, t_coder *coder_list)
+t_monitoring	*monitoring_init(char **argv, t_coder *coder_list, t_dongle *dongle_list)
 {
 	pthread_mutex_t	monitor_mutex;
 	pthread_cond_t	monitor_cond;
@@ -60,5 +60,6 @@ t_monitoring	*monitoring_init(char **argv, t_coder *coder_list)
 	monitor->time_to_burnout = atoi(argv[2]);
 	monitor->coder_list = coder_list;
 	monitor->status = "INIT";
+	monitor->dongle_list = dongle_list;
 	return (monitor);
 }
