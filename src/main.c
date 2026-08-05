@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 08:21:18 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/05 12:05:54 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/05 17:58:01 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,9 @@ int		main(int argc, char **argv)
 	t_coder			coder;
 	t_coder			*coder_list;
 	t_dongle		*dongle_list;
+	long			start_time;
 
+	start_time = ft_get_time();
 	if (parsing_message(argc, argv) != 0)
 		return (1);
 	coders_nb = atoi(argv[1]);
@@ -54,10 +56,10 @@ int		main(int argc, char **argv)
 		return (3);
 	}
 	dongle_list = dongle_list_init(coders_nb);
-	monitor = monitoring_init(argv, coder_list, dongle_list);
+	monitor = monitoring_init(argv, coder_list, dongle_list, start_time);
 	if(!monitor)
 	{
-		printf("error alloc monitor");
+		printf("error malloc monitor");
 		free_monitoring(monitor);
 		return (4);
 	}

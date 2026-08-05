@@ -1,6 +1,6 @@
 NAME = codexion
-CC = gcc
-# CFLAGS = -Wall -Wextra -Werror -MMD -MP -g
+CC = cc
+CFLAGS = -Wall -Wextra -Werror -MMD -MP -g
 CFLAGS = -g #-fsanitize=address -pthread
 BIN_DIR = src/.bin
 

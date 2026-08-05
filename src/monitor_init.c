@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/04 09:05:08 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/05 11:29:23 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/05 17:58:11 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,33 +33,42 @@ int monitor_thread_join(pthread_t monitoring_th)
 	return (0);
 }
 
-t_monitoring	*monitoring_init(char **argv, t_coder *coder_list, t_dongle *dongle_list)
+t_monitoring	*monitoring_init(char **argv, t_coder *coder_list, t_dongle *dongle_list, long start_time)
 {
 	pthread_mutex_t	monitor_mutex;
+	pthread_mutex_t	print_mutex;
 	pthread_cond_t	monitor_cond;
 	t_monitoring *monitor = malloc(sizeof(t_monitoring));
 
     if (!monitor)
         return (NULL);
 
-	monitor->coders_nb = atoi(argv[1]);
-
     monitor->monitor_mutex = malloc(sizeof(pthread_mutex_t));
     monitor->monitor_cond = malloc(sizeof(pthread_cond_t));
-	// monitor->coder_list = malloc(sizeof(t_coder) * monitor->coders_nb);
+	monitor->print_mutex = malloc(sizeof(pthread_mutex_t));
 
     if (!monitor->monitor_mutex || !monitor->monitor_cond )
         return (NULL);
 
     pthread_mutex_init(monitor->monitor_mutex, NULL);
+    pthread_mutex_init(monitor->print_mutex, NULL);
     pthread_cond_init(monitor->monitor_cond, NULL);
-	monitor->compiling_nb = atoi(argv[6]);
+
 	monitor->last_compile = ft_get_time();
 	if (monitor->last_compile == 1)
 		return (NULL);
-	monitor->time_to_burnout = atoi(argv[2]);
+
 	monitor->coder_list = coder_list;
 	monitor->status = "INIT";
 	monitor->dongle_list = dongle_list;
+	monitor->start_time = start_time;
+	monitor->coders_nb = atoi(argv[1]);
+	monitor->time_to_burnout = atoi(argv[2]);
+	monitor->time_to_compile = atoi(argv[3]);
+	monitor->time_to_debug = atoi(argv[4]);
+	monitor->time_to_refactor = atoi(argv[5]);
+	monitor->compiling_nb = atoi(argv[6]);
+	monitor->dongle_cooldown = atoi(argv[7]);
+	monitor->scheduler = argv[7];
 	return (monitor);
 }

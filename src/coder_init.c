@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/04 09:04:49 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/05 12:08:17 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/05 16:58:11 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	coder_thread_join(int coders_nb, pthread_t *coder_th)
 	return(0);
 }
 
-t_coder	*coder_list_init(int coders_nb, t_monitoring *monitor, t_coder *dongle_list)
+t_coder	*coder_list_init(int coders_nb, t_monitoring *monitor, t_dongle *dongle_list)
 {
 	t_coder			*coder_list;
 	int				coder_index;    
@@ -44,7 +44,9 @@ t_coder	*coder_list_init(int coders_nb, t_monitoring *monitor, t_coder *dongle_l
 		coder_list[coder_index].status = "init";
 		coder_list[coder_index].monitor = monitor;
 		coder_list[coder_index].right_dongle = &(dongle_list[coder_index]);
-		coder_list[coder_index].left_dongle = &(dongle_list[coder_index - 1]);
+		if (coder_index == 0)
+			coder_list[coder_index].left_dongle = &(dongle_list[-1]);
+		coder_list[coder_index].left_dongle = &(dongle_list[coder_index]);
 		coder_index++;
 	}
 	return (coder_list);
@@ -58,7 +60,7 @@ int	coder_th_creation(t_coder *coder_list, int coders_nb, pthread_t *coder_th, t
 	coder_index = 0;
 	while (coder_index < coders_nb)
 	{
-		printf("coder %i create\n", coder_index + 1);
+		// printf("coder %i create\n", coder_index + 1);
 		if (pthread_create(&(coder_th[coder_index]), NULL, &coder_routine, &(coder_list[coder_index])) != 0)
 		{
 			printf("coder %i thread CREATION fails\n", coder_index);
@@ -70,6 +72,6 @@ int	coder_th_creation(t_coder *coder_list, int coders_nb, pthread_t *coder_th, t
 	pthread_mutex_lock(monitor->monitor_mutex);
 	monitor->status = "READY";
 	pthread_mutex_unlock(monitor->monitor_mutex);
-	
+	pthread_cond_signal(monitor->monitor_cond);
 	return (0);
 }

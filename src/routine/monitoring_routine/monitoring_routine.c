@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/25 16:02:13 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/05 11:56:45 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/05 18:15:03 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	*monitoring_routine(void* monitoring)
 	struct timeval	current_time; 
 	t_monitoring 	*monitor;
 
-	printf("monitoring thread is created\n");
+	// printf("monitoring thread is created\n");
 	monitor = (t_monitoring*)monitoring;
 	pthread_mutex_lock(monitor->monitor_mutex);
 
@@ -28,12 +28,12 @@ void	*monitoring_routine(void* monitoring)
 	{	
 		// printf("CAR: %d\n", coder_are_ready(monitor->coder_list, monitor->coders_nb));
 
-		printf("monitor is waiting\n");
+		// printf("monitor is waiting\n");
 		pthread_cond_wait(monitor->monitor_cond, monitor->monitor_mutex);
-		printf("monitor finish waiting\n");
+		// printf("monitor finish waiting\n");
 	}
-	monitor->status = "READY";
 	pthread_cond_broadcast(monitor->monitor_cond);
+	// printf("broadcast is done\n");
 	while(1)
 	{
 		time = ft_get_time();
