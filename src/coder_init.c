@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/04 09:04:49 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/05 12:07:08 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/05 12:08:17 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	coder_thread_join(int coders_nb, pthread_t *coder_th)
 t_coder	*coder_list_init(int coders_nb, t_monitoring *monitor, t_coder *dongle_list)
 {
 	t_coder			*coder_list;
-	int				coder_index;
+	int				coder_index;    
 
 	coder_list = malloc(sizeof(t_coder) * coders_nb);
 	if (!coder_list)
