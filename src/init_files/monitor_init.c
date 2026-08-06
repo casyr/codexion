@@ -6,11 +6,11 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/04 09:05:08 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/06 09:01:07 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/06 16:53:44 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "monitoring.h"
+#include "../header_files/monitoring.h"
 
 int	monitoring_th_creation(t_monitoring *monitor, pthread_t *monitoring_th, t_coder *coder_list, int coders_nb)
 {
@@ -33,13 +33,14 @@ int monitor_thread_join(pthread_t monitoring_th)
 	return (0);
 }
 
-t_monitoring	*monitoring_init(char **argv, t_coder *coder_list, t_dongle *dongle_list, long start_time)
+t_monitoring	*monitoring_init(char **argv, t_dongle *dongle_list, long start_time)
 {
 	pthread_mutex_t	monitor_mutex;
 	pthread_mutex_t	print_mutex;
 	pthread_cond_t	monitor_cond;
-	t_monitoring *monitor = malloc(sizeof(t_monitoring));
+	t_monitoring *monitor; 
 
+	monitor = malloc(sizeof(t_monitoring));
     if (!monitor)
         return (NULL);
 
@@ -59,7 +60,6 @@ t_monitoring	*monitoring_init(char **argv, t_coder *coder_list, t_dongle *dongle
 	if (monitor->last_compile == 1)
 		return (NULL);
 
-	monitor->coder_list = coder_list;
 	monitor->status = "INIT";
 	monitor->dongle_list = dongle_list;
 	monitor->start_time = start_time;

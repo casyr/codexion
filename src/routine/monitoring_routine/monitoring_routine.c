@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/25 16:02:13 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/06 11:44:57 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/06 13:54:02 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ void	*monitoring_routine(void* monitoring)
 	struct timeval	current_time; 
 	t_monitoring 	*monitor;
 
-	// printf("monitoring thread is created\n");
 	monitor = (t_monitoring*)monitoring;
 	pthread_mutex_lock(monitor->monitor_mutex);
 	while (strcmp(monitor->status, "READY") != 0)

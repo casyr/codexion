@@ -3,7 +3,7 @@
 
 # include "monitoring.h"
 # include "dongle.h"
-# include "routine/coder_routine/coder_routine.h"
+# include "coder_routine.h"
 # include <pthread.h>
 
 typedef struct monitor t_monitoring;

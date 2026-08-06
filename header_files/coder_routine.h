@@ -1,6 +1,6 @@
 #ifndef CODER_ROUTINE_H
 # define CODER_ROUTINE_H
-# include "../../coder.h"
+# include "coder.h"
 # include "stdio.h"
 
 long	ft_get_time();

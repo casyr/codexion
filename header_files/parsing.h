@@ -3,7 +3,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdio.h>
-# include "checkers/checker.h"
+# include "checker.h"
 
 // parsing.c
 int		parsing(int argc, char **argv);
