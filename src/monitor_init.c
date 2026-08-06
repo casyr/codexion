@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/04 09:05:08 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/05 17:58:11 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/06 09:01:07 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ t_monitoring	*monitoring_init(char **argv, t_coder *coder_list, t_dongle *dongle
     pthread_cond_init(monitor->monitor_cond, NULL);
 
 	monitor->last_compile = ft_get_time();
+	monitor->last_dongle_release = ft_get_time();
 	if (monitor->last_compile == 1)
 		return (NULL);
 

@@ -21,6 +21,7 @@ typedef struct monitor
 	int				dongle_cooldown;
 	char			*scheduler;
 	long			start_time;
+	long			last_dongle_release;
 
 	pthread_mutex_t	*print_mutex;
 	t_coder 		*coder_list;
