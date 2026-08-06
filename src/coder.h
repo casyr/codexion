@@ -15,6 +15,7 @@ typedef struct coder
 	t_monitoring	*monitor;
 	t_dongle		*left_dongle;
 	t_dongle		*right_dongle;
+	int				compile_count;
 } t_coder;
 
 int		coder_thread_join(int coders_nb, pthread_t *coder_th);

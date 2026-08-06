@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/04 09:04:49 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/05 16:58:11 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/06 12:01:15 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ t_coder	*coder_list_init(int coders_nb, t_monitoring *monitor, t_dongle *dongle_
 	while (coder_index < coders_nb)
 	{
 		coder_list[coder_index].id = coder_index + 1;
+		coder_list[coder_index].compile_count = 0;
 		coder_list[coder_index].status = "init";
 		coder_list[coder_index].monitor = monitor;
 		coder_list[coder_index].right_dongle = &(dongle_list[coder_index]);
