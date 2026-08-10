@@ -23,6 +23,8 @@ typedef struct monitor
 	long			start_time;
 	long			last_dongle_release;
 
+	t_coder			*coder_list;
+
 	pthread_mutex_t	*print_mutex;
 	char			*status;
 	pthread_mutex_t	*monitor_mutex;

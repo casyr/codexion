@@ -16,9 +16,10 @@ typedef struct coder
 	t_dongle		*left_dongle;
 	t_dongle		*right_dongle;
 	int				compile_count;
+	long			last_compile;
 } t_coder;
 
 int		coder_thread_join(int coders_nb, pthread_t *coder_th);
-t_coder	*coder_list_init(int coders_nb, t_monitoring *monitor, t_dongle *dongle_list);
+t_coder	*coder_list_init(int coders_nb, t_dongle *dongle_list, t_monitoring *monitor);
 
 #endif

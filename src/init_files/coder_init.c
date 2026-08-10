@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/04 09:04:49 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/06 17:22:01 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/10 11:59:50 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	coder_thread_join(int coders_nb, pthread_t *coder_th)
 	return(0);
 }
 
-t_coder	*coder_list_init(int coders_nb, t_monitoring *monitor, t_dongle *dongle_list)
+t_coder	*coder_list_init(int coders_nb, t_dongle *dongle_list, t_monitoring *monitor)
 {
 	t_coder			*coder_list;
 	int				coder_index;    
@@ -43,12 +43,11 @@ t_coder	*coder_list_init(int coders_nb, t_monitoring *monitor, t_dongle *dongle_
 		coder_list[coder_index].id = coder_index + 1;
 		coder_list[coder_index].compile_count = 0;
 		coder_list[coder_index].status = "init";
-		coder_list[coder_index].monitor = monitor;
-		coder_list[coder_index].right_dongle = malloc(sizeof(t_dongle));
-		coder_list[coder_index].left_dongle = malloc(sizeof(t_dongle));
 		coder_list[coder_index].right_dongle = &(dongle_list[coder_index]);
+		coder_list[coder_index].last_compile = ft_get_time();
+		coder_list[coder_index].monitor = monitor;
 		if (coder_index == 0)
-			coder_list[coder_index].left_dongle = &(dongle_list[-1]);
+			coder_list[coder_index].left_dongle = &(dongle_list[coders_nb - 1]);
 		else
 			coder_list[coder_index].left_dongle = &(dongle_list[coder_index - 1]);
 		coder_index++;
@@ -74,7 +73,7 @@ int	coder_th_creation(t_coder *coder_list, int coders_nb, pthread_t *coder_th, t
 	}
 	pthread_mutex_lock(monitor->monitor_mutex);
 	monitor->status = "READY";
-	pthread_mutex_unlock(monitor->monitor_mutex);
 	pthread_cond_signal(monitor->monitor_cond);
+	pthread_mutex_unlock(monitor->monitor_mutex);
 	return (0);
 }

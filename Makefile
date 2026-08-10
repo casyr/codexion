@@ -1,7 +1,7 @@
 NAME = codexion
-CC = gcc
+CC = cc
 CFLAGS = -Wall -Wextra -Werror -MMD -MP
-CFLAGS = -g -fsanitize=address -pthread
+CFLAGS = -g #-fsanitize=address -pthread
 BIN_DIR = src/.bin
 
 HEARDER_FILES = header_files 

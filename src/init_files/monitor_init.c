@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/04 09:05:08 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/06 16:53:44 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/10 11:57:05 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,19 +41,19 @@ t_monitoring	*monitoring_init(char **argv, t_dongle *dongle_list, long start_tim
 	t_monitoring *monitor; 
 
 	monitor = malloc(sizeof(t_monitoring));
-    if (!monitor)
-        return (NULL);
+	if (!monitor)
+		return (NULL);
 
-    monitor->monitor_mutex = malloc(sizeof(pthread_mutex_t));
-    monitor->monitor_cond = malloc(sizeof(pthread_cond_t));
+	monitor->monitor_mutex = malloc(sizeof(pthread_mutex_t));
+	monitor->monitor_cond = malloc(sizeof(pthread_cond_t));
 	monitor->print_mutex = malloc(sizeof(pthread_mutex_t));
 
-    if (!monitor->monitor_mutex || !monitor->monitor_cond )
-        return (NULL);
+	if (!monitor->monitor_mutex || !monitor->monitor_cond )
+		return (NULL);
 
-    pthread_mutex_init(monitor->monitor_mutex, NULL);
-    pthread_mutex_init(monitor->print_mutex, NULL);
-    pthread_cond_init(monitor->monitor_cond, NULL);
+	pthread_mutex_init(monitor->monitor_mutex, NULL);
+	pthread_mutex_init(monitor->print_mutex, NULL);
+	pthread_cond_init(monitor->monitor_cond, NULL);
 
 	monitor->last_compile = ft_get_time();
 	monitor->last_dongle_release = ft_get_time();
@@ -70,6 +70,6 @@ t_monitoring	*monitoring_init(char **argv, t_dongle *dongle_list, long start_tim
 	monitor->time_to_refactor = atoi(argv[5]);
 	monitor->compiling_nb = atoi(argv[6]);
 	monitor->dongle_cooldown = atoi(argv[7]);
-	monitor->scheduler = argv[7];
+	monitor->scheduler = argv[8];
 	return (monitor);
 }

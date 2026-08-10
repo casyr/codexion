@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/05 11:01:45 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/06 17:00:04 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/10 09:05:52 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ t_dongle	*dongle_list_init(int coders_nb)
 	int				i;
 
 	i = 0;
-
 	dongle_list = malloc(sizeof(t_dongle) * coders_nb);
 	while (i < coders_nb)
 	{

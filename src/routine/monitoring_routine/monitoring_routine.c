@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/25 16:02:13 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/06 13:54:02 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/10 12:02:31 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,9 @@ void	*monitoring_routine(void* monitoring)
 	long 			time;
 	struct timeval	current_time; 
 	t_monitoring 	*monitor;
+	int				i;
 
+	i = 0;
 	monitor = (t_monitoring*)monitoring;
 	pthread_mutex_lock(monitor->monitor_mutex);
 	while (strcmp(monitor->status, "READY") != 0)
@@ -35,12 +37,18 @@ void	*monitoring_routine(void* monitoring)
 		}
 		// printf("%ld - %ld = %ld > %ld \n", time, monitor->last_compile, time - monitor->last_compile, monitor->time_to_burnout);
 		pthread_mutex_lock(monitor->monitor_mutex);
-		if (time - monitor->last_compile > monitor->time_to_burnout)
+		while(i < monitor->coders_nb)
 		{
-			monitor->status = "BURNOUT";
-			pthread_mutex_unlock(monitor->monitor_mutex);
-			break;
+			if (time - monitor->coder_list[i].last_compile > monitor->time_to_burnout)
+			{
+				monitor->status = "BURNOUT";
+				pthread_mutex_unlock(monitor->monitor_mutex);
+				break;
+			}
+			i++;
 		}
+		if (strcmp(monitor->status, "BURNOUT") == 0)
+			break;
 		pthread_mutex_unlock(monitor->monitor_mutex);
 		usleep(1000);
 	}

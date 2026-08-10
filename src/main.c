@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 08:21:18 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/06 15:14:23 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/10 11:45:59 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,17 @@ void free_all(t_monitoring *monitor, t_dongle *dongle_list, pthread_t *coder_th,
 	while (i < monitor->coders_nb)
 	{
 		free(dongle_list[i].dongle_mutex);
+		i++;
 	}
 	free(dongle_list);
 
 	free(coder_th);
-
+	// while (i < monitor->coders_nb)
+	// {
+	// 	free(coder_list[i].left_dongle);
+	// 	free(coder_list[i].right_dongle);
+	// 	i++;
+	// }
 	free(coder_list);
 }
 
@@ -87,12 +93,15 @@ int	main(int argc, char **argv)
 		// free_all(monitor, dongle_list);
 		return (4);
 	}
-	coder_list = coder_list_init(coders_nb, monitor, dongle_list);
+	
+	coder_list = coder_list_init(coders_nb, dongle_list, monitor);
 	if (!coder_list)
 	{
 		return (5);
 		// free_all(monitor, dongle_list); /// 
 	}
+	
+	monitor->coder_list = coder_list;
 
 	if(monitoring_th_creation(monitor, &monitoring_th, coder_list, coders_nb) != 0)
 	{
@@ -115,6 +124,7 @@ int	main(int argc, char **argv)
 	}
 	destroy_all(monitor);
 	free_all(monitor, dongle_list, coder_th, coder_list);
+
 	return (0);
 }
 
