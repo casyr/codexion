@@ -22,6 +22,7 @@ typedef struct monitor
 	char			*scheduler;
 	long			start_time;
 	long			last_dongle_release;
+	int 			finished_coders_nb;
 
 	t_coder			*coder_list;
 

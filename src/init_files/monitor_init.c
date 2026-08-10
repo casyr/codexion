@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/04 09:05:08 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/10 11:57:05 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/10 18:28:56 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,15 +41,34 @@ t_monitoring	*monitoring_init(char **argv, t_dongle *dongle_list, long start_tim
 	t_monitoring *monitor; 
 
 	monitor = malloc(sizeof(t_monitoring));
-	if (!monitor)
+	if (!monitor) /////////// corriger par !monitor
 		return (NULL);
 
 	monitor->monitor_mutex = malloc(sizeof(pthread_mutex_t));
-	monitor->monitor_cond = malloc(sizeof(pthread_cond_t));
-	monitor->print_mutex = malloc(sizeof(pthread_mutex_t));
-
-	if (!monitor->monitor_mutex || !monitor->monitor_cond )
+	if (!monitor->monitor_mutex )
+	{
+		free(monitor);
 		return (NULL);
+	}
+
+	monitor->monitor_cond = malloc(sizeof(pthread_cond_t));
+	if (!monitor->monitor_cond)
+	{
+		free(monitor->monitor_mutex);
+		free(monitor);
+		return (NULL);
+	}
+
+	monitor->finished_coders_nb = 0;
+
+	monitor->print_mutex = malloc(sizeof(pthread_mutex_t));
+	if (!monitor->print_mutex)
+	{
+		free(monitor->monitor_mutex);
+		free(monitor->monitor_cond);
+		free(monitor);
+		return (NULL);
+	}
 
 	pthread_mutex_init(monitor->monitor_mutex, NULL);
 	pthread_mutex_init(monitor->print_mutex, NULL);

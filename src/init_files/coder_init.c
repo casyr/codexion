@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/04 09:04:49 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/10 11:59:50 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/10 18:06:47 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	coder_th_creation(t_coder *coder_list, int coders_nb, pthread_t *coder_th, t
 			printf("coder %i thread CREATION fails\n", coder_index);
 			return (1);
 		}
-
+		
 		coder_index++;
 	}
 	pthread_mutex_lock(monitor->monitor_mutex);

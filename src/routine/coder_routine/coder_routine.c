@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/25 16:04:18 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/10 11:38:08 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/10 19:05:03 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,16 +55,17 @@ void	coder_action(t_coder *coder)
 	long	time_to_compile;
 	long	time_to_refactor;
 	long	time_to_debug;
-	int		compiling_nb;
+	int		target_compiling_nb;
 	t_dongle	*first_dongle;
 	t_dongle	*second_dongle;
-	
+
 	pthread_mutex_lock(coder->monitor->monitor_mutex);
 	time_to_compile = coder->monitor->time_to_compile;
 	time_to_refactor = coder->monitor->time_to_refactor;
 	time_to_debug = coder->monitor->time_to_debug;
-	compiling_nb = coder->monitor->compiling_nb;
+	target_compiling_nb = coder->monitor->compiling_nb;
 	compile_count = coder->compile_count;
+	
 	pthread_mutex_unlock(coder->monitor->monitor_mutex);
 
 	if (coder->left_dongle->dongle_mutex < coder->right_dongle->dongle_mutex)
@@ -78,10 +79,11 @@ void	coder_action(t_coder *coder)
 		second_dongle = coder->left_dongle;
 	}
 	// printf("%i, %i\n", compile_count, compiling_nb);
-	if (compile_count == compiling_nb)
+	if (compile_count >= target_compiling_nb)
 	{
 		pthread_mutex_lock(coder->monitor->monitor_mutex);
-		coder->monitor->status = "FINISH";
+		coder->status = "FINISH";
+		coder->monitor->finished_coders_nb += 1;
 		pthread_mutex_unlock(coder->monitor->monitor_mutex);
 		return;
 	}
@@ -90,29 +92,26 @@ void	coder_action(t_coder *coder)
 		return;
 
 	pthread_mutex_lock(first_dongle->dongle_mutex);
+	pthread_mutex_lock(second_dongle->dongle_mutex);
 	first_dongle->is_free = false;
-	pthread_mutex_unlock(first_dongle->dongle_mutex);
+
 	print_log("has taken a dongle", coder);
 
-	pthread_mutex_lock(second_dongle->dongle_mutex);
+
 	second_dongle->is_free = false;
-	pthread_mutex_unlock(second_dongle->dongle_mutex);
+
 	print_log("has taken a dongle", coder);
 
 	print_log("is compiling", coder);
 
 	usleep(time_to_compile);
-	pthread_mutex_lock(coder->monitor->monitor_mutex);
-	coder->compile_count++;
-	pthread_mutex_unlock(coder->monitor->monitor_mutex);
 
-	pthread_mutex_lock(coder->monitor->monitor_mutex);
+	coder->compile_count++;
+	// printf("coder id: %i, compile nb: %i, finished coder nb %i\n", coder->id, coder->compile_count, coder->monitor->finished_coders_nb);
+
 	coder->monitor->last_compile = ft_get_time();
 	coder->monitor->last_dongle_release = ft_get_time();
-	pthread_mutex_unlock(coder->monitor->monitor_mutex);
-
-	pthread_mutex_lock(first_dongle->dongle_mutex);
-	pthread_mutex_lock(second_dongle->dongle_mutex);
+	
 	first_dongle->is_free = true;
 	second_dongle->is_free = true;
 	pthread_mutex_unlock(first_dongle->dongle_mutex);
@@ -140,18 +139,23 @@ void	*coder_routine(void *v_coder)
 	coder->status = "READY";
 	while (strcmp(coder->monitor->status, "READY") != 0)
 	{
-		// printf("i wait");
+		if (strcmp(coder->monitor->status, "BURNOUT") == 0)
+		{
+			pthread_mutex_unlock(coder->monitor->monitor_mutex);
+			return (NULL);
+		}
+		// printf("wait\n");
 		pthread_cond_wait(coder->monitor->monitor_cond, coder->monitor->monitor_mutex);
 	}
+	pthread_mutex_unlock(coder->monitor->monitor_mutex);
 	if (coder->id % 2 == 0)
 		usleep(1000);
-	pthread_mutex_unlock(coder->monitor->monitor_mutex);
 	while (1)
 	{
 		pthread_mutex_lock(coder->monitor->monitor_mutex);
+		
 		if(strcmp(coder->monitor->status, "BURNOUT") == 0 || strcmp(coder->monitor->status, "FINISH") == 0)
 		{
-
 			pthread_mutex_unlock(coder->monitor->monitor_mutex);
 			break;
 		}
