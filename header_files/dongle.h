@@ -13,6 +13,7 @@ typedef struct	s_dongle
 	int				id;
 	pthread_mutex_t	*dongle_mutex;
 	int				queue[2];
+	long			last_release;
 } t_dongle;
 
 t_dongle	*dongle_list_init(int coders_nb);

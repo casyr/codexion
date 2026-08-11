@@ -6,13 +6,13 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/04 09:05:08 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/10 18:28:56 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/11 10:07:18 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../header_files/monitoring.h"
 
-int	monitoring_th_creation(t_monitoring *monitor, pthread_t *monitoring_th, t_coder *coder_list, int coders_nb)
+int	monitoring_th_creation(t_monitoring *monitor, pthread_t *monitoring_th)
 {
 
 	if (pthread_create(monitoring_th, NULL, &monitoring_routine, monitor) != 0)
@@ -35,9 +35,6 @@ int monitor_thread_join(pthread_t monitoring_th)
 
 t_monitoring	*monitoring_init(char **argv, t_dongle *dongle_list, long start_time)
 {
-	pthread_mutex_t	monitor_mutex;
-	pthread_mutex_t	print_mutex;
-	pthread_cond_t	monitor_cond;
 	t_monitoring *monitor; 
 
 	monitor = malloc(sizeof(t_monitoring));

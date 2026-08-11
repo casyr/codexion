@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/25 16:04:18 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/10 19:05:03 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/11 11:59:06 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,28 +24,21 @@ void print_log(char *string, t_coder *coder)
 	pthread_mutex_unlock(coder->monitor->print_mutex);
 }
 
-int	dongle_is_avaible(t_dongle *first_dongle, t_dongle *second_dongle,  t_coder *coder, int compile_count)
+int	dongles_are_avaible(t_dongle *first_dongle, t_dongle *second_dongle,  t_coder *coder, int compile_count)
 {
 	// printf("left: %p", coder->left_dongle->dongle_mutex);
 	// printf("right: %p", coder->right_dongle->dongle_mutex);
 	pthread_mutex_lock(first_dongle->dongle_mutex);
 	pthread_mutex_lock(second_dongle->dongle_mutex);
 	if (compile_count == 0 && coder->left_dongle->is_free == true && coder->right_dongle->is_free == true)
-	{
-		pthread_mutex_unlock(coder->left_dongle->dongle_mutex);
-		pthread_mutex_unlock(coder->right_dongle->dongle_mutex);
 		return (0);
-	}
 	if (coder->left_dongle->is_free == true &&
 		coder->right_dongle->is_free == true &&
-		ft_get_time() - coder->monitor->last_dongle_release > coder->monitor->dongle_cooldown)
-	{
-		pthread_mutex_unlock(coder->left_dongle->dongle_mutex);
-		pthread_mutex_unlock(coder->right_dongle->dongle_mutex);
+		ft_get_time() - coder->right_dongle->last_release > coder->monitor->dongle_cooldown &&
+		ft_get_time() - coder->left_dongle->last_release > coder->monitor->dongle_cooldown)
 		return (0);
-	}
-	pthread_mutex_unlock(coder->left_dongle->dongle_mutex);
-	pthread_mutex_unlock(coder->right_dongle->dongle_mutex);
+	pthread_mutex_unlock(first_dongle->dongle_mutex);
+	pthread_mutex_unlock(second_dongle->dongle_mutex);
 	return (1);
 }
 
@@ -65,7 +58,6 @@ void	coder_action(t_coder *coder)
 	time_to_debug = coder->monitor->time_to_debug;
 	target_compiling_nb = coder->monitor->compiling_nb;
 	compile_count = coder->compile_count;
-	
 	pthread_mutex_unlock(coder->monitor->monitor_mutex);
 
 	if (coder->left_dongle->dongle_mutex < coder->right_dongle->dongle_mutex)
@@ -78,8 +70,16 @@ void	coder_action(t_coder *coder)
 		first_dongle = coder->right_dongle;
 		second_dongle = coder->left_dongle;
 	}
-	// printf("%i, %i\n", compile_count, compiling_nb);
-	if (compile_count >= target_compiling_nb)
+
+	// printf("coder id: %i, compile nb: %i, finished coder nb %i, monitor status: %s\n", coder->id, coder->compile_count, coder->monitor->finished_coders_nb, coder->monitor->status);
+
+	if (strcmp(coder->status, "FINISH") == 0)
+	{
+		usleep(200);
+		return;
+	}
+
+	if (compile_count == target_compiling_nb)
 	{
 		pthread_mutex_lock(coder->monitor->monitor_mutex);
 		coder->status = "FINISH";
@@ -87,42 +87,38 @@ void	coder_action(t_coder *coder)
 		pthread_mutex_unlock(coder->monitor->monitor_mutex);
 		return;
 	}
+
 	// printf("%i,\n", dongle_is_avaible(coder, compile_count));
-	if (dongle_is_avaible(first_dongle, second_dongle, coder, compile_count) == 1)
+	if (dongles_are_avaible(first_dongle, second_dongle, coder, compile_count) == 1)
 		return;
 
-	pthread_mutex_lock(first_dongle->dongle_mutex);
-	pthread_mutex_lock(second_dongle->dongle_mutex);
 	first_dongle->is_free = false;
-
 	print_log("has taken a dongle", coder);
 
-
 	second_dongle->is_free = false;
-
 	print_log("has taken a dongle", coder);
 
 	print_log("is compiling", coder);
-
-	usleep(time_to_compile);
-
+	usleep(time_to_compile * 1000);
 	coder->compile_count++;
-	// printf("coder id: %i, compile nb: %i, finished coder nb %i\n", coder->id, coder->compile_count, coder->monitor->finished_coders_nb);
 
-	coder->monitor->last_compile = ft_get_time();
-	coder->monitor->last_dongle_release = ft_get_time();
+	pthread_mutex_lock(coder->monitor->monitor_mutex);
+	coder->last_compile = ft_get_time();
+	coder->monitor->last_dongle_release = ft_get_time(); ////// supprrr???
+	pthread_mutex_unlock(coder->monitor->monitor_mutex);
 	
 	first_dongle->is_free = true;
 	second_dongle->is_free = true;
+	coder->left_dongle->last_release = ft_get_time();
+	coder->right_dongle->last_release = ft_get_time();
 	pthread_mutex_unlock(first_dongle->dongle_mutex);
 	pthread_mutex_unlock(second_dongle->dongle_mutex);
 
 	print_log("is debugging", coder);
-	usleep(time_to_debug);
+	usleep(time_to_debug * 1000);
 
 	print_log("is refactoring", coder);
-	usleep(time_to_refactor);
-
+	usleep(time_to_refactor * 1000);
 }
 
 void	*coder_routine(void *v_coder)
@@ -153,7 +149,7 @@ void	*coder_routine(void *v_coder)
 	while (1)
 	{
 		pthread_mutex_lock(coder->monitor->monitor_mutex);
-		
+
 		if(strcmp(coder->monitor->status, "BURNOUT") == 0 || strcmp(coder->monitor->status, "FINISH") == 0)
 		{
 			pthread_mutex_unlock(coder->monitor->monitor_mutex);
@@ -163,14 +159,6 @@ void	*coder_routine(void *v_coder)
 		coder_action(coder);
 		usleep(200);
 	}
-
-	pthread_mutex_lock(coder->monitor->monitor_mutex);
-	if (strcmp(coder->monitor->status, "BURNOUT") == 0)
-		burned_out = 1;
-	pthread_mutex_unlock(coder->monitor->monitor_mutex);
-
-	if (burned_out == 1)
-		print_log("burned out", coder);
 	return (NULL);
 }
 

@@ -1,10 +1,10 @@
 NAME = codexion
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -MMD -MP
-CFLAGS = -g #-fsanitize=address -pthread
+CFLAGS = -Wall -Wextra -Werror -MMD -MP -g
+# CFLAGS = -g #-fsanitize=address -pthread
 BIN_DIR = src/.bin
 
-HEARDER_FILES = header_files 
+HEADER_FILES = header_files 
 
 CHECKERS = src/parser/checkers
 
@@ -21,22 +21,22 @@ SRC = $(PARSING_FILE) \
 		src/init_files/coder_init.c \
 		src/init_files/dongle_init.c 
 
-
+                           
 OBJ = $(patsubst %.c, $(BIN_DIR)/%.o , $(SRC))
-DEP = $(patsubst %.c, $(BIN_DIR)/%.d, $(SRC))
 
-all : $(NAME)
+
+all : $(NAME) Makefile
 $(NAME) : $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) -o $@ 
+	$(CC) $(CFLAGS) $(OBJ) -o $@
 
-$(BIN_DIR)/%.o : %.c
+$(BIN_DIR)/%.o : %.c Makefile
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -I $(HEARDER_FILES) -c $< -o $@ 
+	$(CC) $(CFLAGS) -I $(HEADER_FILES) -c $< -o $@ 
 
 $(BIN_DIR):
 	mkdir -p $(BIN_DIR)
 
-clean : 
+clean :
 	rm -rf $(BIN_DIR) .vscode/
 
 fclean : clean
@@ -44,6 +44,8 @@ fclean : clean
 
 re : fclean
 	$(MAKE) all
+
+DEP = $(patsubst %.c, $(BIN_DIR)/%.d, $(SRC))
 
 -include $(DEP)
 

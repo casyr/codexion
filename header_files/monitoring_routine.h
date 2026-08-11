@@ -4,7 +4,10 @@
 # include "sys/time.h"
 # include <string.h>
 # include <unistd.h>
+# include "coder.h"
+
+typedef struct coder t_coder;
 
 void	*monitoring_routine(void* monitor);
-
+void	print_log(char *string, t_coder *coder);
 #endif

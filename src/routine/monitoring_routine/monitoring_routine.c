@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/25 16:02:13 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/10 19:09:43 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/11 11:57:24 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,7 @@
 
 void	*monitoring_routine(void* monitoring)
 {
-	int 			compiling_counter;
 	long 			time;
-	struct timeval	current_time; 
 	t_monitoring 	*monitor;
 	int				i;
 
@@ -58,6 +56,7 @@ void	*monitoring_routine(void* monitoring)
 			if (time - monitor->coder_list[i].last_compile > monitor->time_to_burnout)
 			{
 				monitor->status = "BURNOUT";
+				printf("%li %i burned out\n", time - monitor->start_time, monitor->coder_list[i].id);;
 				pthread_mutex_unlock(monitor->monitor_mutex);
 				break;
 			}

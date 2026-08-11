@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 08:21:18 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/10 17:13:39 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/11 10:07:08 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,6 @@ int	main(int argc, char **argv)
 	pthread_t 		*coder_th;
 	pthread_t		monitoring_th;
 	t_monitoring	*monitor;
-	t_coder			coder;
 	t_coder			*coder_list;
 	t_dongle		*dongle_list;
 	long			start_time;
@@ -134,7 +133,7 @@ int	main(int argc, char **argv)
 
 	monitor->coder_list = coder_list;
 
-	if(monitoring_th_creation(monitor, &monitoring_th, coder_list, coders_nb) != 0)
+	if(monitoring_th_creation(monitor, &monitoring_th) != 0)
 	{
 		printf("error monitor thread");
 		destroy_all(monitor, dongle_list, coders_nb);

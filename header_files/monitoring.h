@@ -33,7 +33,7 @@ typedef struct monitor
 	t_dongle		*dongle_list;
 } t_monitoring;
 
-int				monitoring_th_creation(t_monitoring *monitor, pthread_t *monitoring_th, t_coder *coder_list, int coders_nb);
+int				monitoring_th_creation(t_monitoring *monitor, pthread_t *monitoring_th);
 int				coder_th_creation(t_coder *coder_list, int coders_nb, pthread_t *coder_th, t_monitoring *monitor);
 int 			monitor_thread_join(pthread_t monitoring_th);
 t_monitoring	*monitoring_init(char **argv, t_dongle *dongle_list, long start_time);
