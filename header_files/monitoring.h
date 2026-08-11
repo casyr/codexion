@@ -23,6 +23,7 @@ typedef struct monitor
 	long			start_time;
 	long			last_dongle_release;
 	int 			finished_coders_nb;
+	int				total_compile_counter;
 
 	t_coder			*coder_list;
 

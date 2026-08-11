@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/04 09:05:08 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/11 10:07:18 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/11 14:00:39 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,8 @@ t_monitoring	*monitoring_init(char **argv, t_dongle *dongle_list, long start_tim
 	pthread_mutex_init(monitor->monitor_mutex, NULL);
 	pthread_mutex_init(monitor->print_mutex, NULL);
 	pthread_cond_init(monitor->monitor_cond, NULL);
+
+	monitor->total_compile_counter = 0;
 
 	monitor->last_compile = ft_get_time();
 	monitor->last_dongle_release = ft_get_time();

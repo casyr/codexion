@@ -6,31 +6,19 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/25 16:04:18 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/11 11:59:06 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/11 17:16:31 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "coder_routine.h"
 
-void print_log(char *string, t_coder *coder)
-{
-	long	time;
-
-	pthread_mutex_lock(coder->monitor->monitor_mutex);
-	time = ft_get_time() - coder->monitor->start_time;
-	pthread_mutex_unlock(coder->monitor->monitor_mutex);
-	pthread_mutex_lock(coder->monitor->print_mutex);
-	printf("%li %i %s\n", time, coder->id, string);
-	pthread_mutex_unlock(coder->monitor->print_mutex);
-}
-
-int	dongles_are_avaible(t_dongle *first_dongle, t_dongle *second_dongle,  t_coder *coder, int compile_count)
+int	dongles_are_avaible(t_dongle *first_dongle, t_dongle *second_dongle,  t_coder *coder)
 {
 	// printf("left: %p", coder->left_dongle->dongle_mutex);
 	// printf("right: %p", coder->right_dongle->dongle_mutex);
 	pthread_mutex_lock(first_dongle->dongle_mutex);
 	pthread_mutex_lock(second_dongle->dongle_mutex);
-	if (compile_count == 0 && coder->left_dongle->is_free == true && coder->right_dongle->is_free == true)
+	if (coder->monitor->total_compile_counter == 0 && coder->left_dongle->is_free == true && coder->right_dongle->is_free == true)
 		return (0);
 	if (coder->left_dongle->is_free == true &&
 		coder->right_dongle->is_free == true &&
@@ -87,9 +75,11 @@ void	coder_action(t_coder *coder)
 		pthread_mutex_unlock(coder->monitor->monitor_mutex);
 		return;
 	}
-
+	
+	// printf("first_dongle hable to copile in %li\n", (first_dongle->last_release + coder->monitor->dongle_cooldown) - ft_get_time());
+	// printf("second hable to copile in %li\n", (second_dongle->last_release + coder->monitor->dongle_cooldown) - ft_get_time());
 	// printf("%i,\n", dongle_is_avaible(coder, compile_count));
-	if (dongles_are_avaible(first_dongle, second_dongle, coder, compile_count) == 1)
+	if (dongles_are_avaible(first_dongle, second_dongle, coder) == 1)
 		return;
 
 	first_dongle->is_free = false;
@@ -98,9 +88,11 @@ void	coder_action(t_coder *coder)
 	second_dongle->is_free = false;
 	print_log("has taken a dongle", coder);
 
+
 	print_log("is compiling", coder);
-	usleep(time_to_compile * 1000);
+	ft_usleep(time_to_compile, coder->monitor);
 	coder->compile_count++;
+	coder->monitor->total_compile_counter ++;
 
 	pthread_mutex_lock(coder->monitor->monitor_mutex);
 	coder->last_compile = ft_get_time();
@@ -115,10 +107,10 @@ void	coder_action(t_coder *coder)
 	pthread_mutex_unlock(second_dongle->dongle_mutex);
 
 	print_log("is debugging", coder);
-	usleep(time_to_debug * 1000);
+	ft_usleep(time_to_debug, coder->monitor);
 
 	print_log("is refactoring", coder);
-	usleep(time_to_refactor * 1000);
+	ft_usleep(time_to_refactor, coder->monitor);
 }
 
 void	*coder_routine(void *v_coder)
@@ -145,7 +137,7 @@ void	*coder_routine(void *v_coder)
 	}
 	pthread_mutex_unlock(coder->monitor->monitor_mutex);
 	if (coder->id % 2 == 0)
-		usleep(1000);
+		usleep(200);
 	while (1)
 	{
 		pthread_mutex_lock(coder->monitor->monitor_mutex);
@@ -161,22 +153,6 @@ void	*coder_routine(void *v_coder)
 	}
 	return (NULL);
 }
-
-// faire en sorte que N sits between coder number N - 1 and coder number N + 1.
-
-// tester avec 3 coders et 
-
-//FAIT creer nb_coders dongle FAIT
-// ckeck si burned out : afficher:  timestamp_in_ms X burned out (geré par le monitor)
-	// faire number_of_compiles_required fois: 
-		// faire partir les coders pair avec un dongle que apres (selon le scheduler):
-		// 1 coder choppe 2 dongles  selon le cooldown et selon le scheduler !!!!!
-		// afficher: timestamp_in_ms X has taken a dongle x2
-		// afficher: timestamp_in_ms is compiling (pendant time_to_compile ms)
-		// lacher les 2 dongles et reacutalise le temps ou tu les lache
-		// afficher: timestamp_in_ms is debugging (pendant time_to_debug ms)
-		// afficher: timestamp_in_ms is refactoring (pendant time_to_refactor ms)
-
 
 // schedluer : FIFO (..)
 //			   EDF  (Eraliest deadline first: last_compile_start + time_to_burnout)

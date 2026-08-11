@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/25 16:02:13 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/11 11:57:24 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/11 15:36:05 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	*monitoring_routine(void* monitoring)
 		if (strcmp(monitor->status, "BURNOUT") == 0)
 			break;
 		pthread_mutex_unlock(monitor->monitor_mutex);
-		usleep(1000);
+		usleep(200);
 	}
 	return (NULL);
 }

@@ -16,6 +16,7 @@ SRC = $(PARSING_FILE) \
 		src/main.c \
 		src/utils.c \
 		src/routine/coder_routine/coder_routine.c \
+		src/routine/coder_routine/coder_routine_utils.c \
 		src/routine/monitoring_routine/monitoring_routine.c \
 		src/init_files/monitor_init.c \
 		src/init_files/coder_init.c \
