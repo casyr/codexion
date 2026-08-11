@@ -17,14 +17,13 @@ SRC = $(PARSING_FILE) \
 		src/utils.c \
 		src/routine/coder_routine/coder_routine.c \
 		src/routine/coder_routine/coder_routine_utils.c \
+		src/routine/coder_routine/queue.c \
 		src/routine/monitoring_routine/monitoring_routine.c \
 		src/init_files/monitor_init.c \
 		src/init_files/coder_init.c \
 		src/init_files/dongle_init.c 
 
-                           
 OBJ = $(patsubst %.c, $(BIN_DIR)/%.o , $(SRC))
-
 
 all : $(NAME) Makefile
 $(NAME) : $(OBJ)
