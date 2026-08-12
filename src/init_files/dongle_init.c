@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/05 11:01:45 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/11 17:48:25 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/12 10:59:51 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ t_dongle	*dongle_list_init(int coders_nb)
 		dongle_list[i].is_free = true;
 		dongle_list[i].dongle_mutex = malloc(sizeof(pthread_mutex_t));
 		dongle_list[i].last_release = ft_get_time();
-		dongle_list[i].queue[1] = NULL;
-		dongle_list[i].queue[2] = NULL;
+		// dongle_list[i].queue[0] = 0;
+		// dongle_list[i].queue[1] = 0;
 		if (!dongle_list[i].dongle_mutex)
 		{
 			while (i >= 0)
