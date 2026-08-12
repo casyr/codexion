@@ -6,12 +6,11 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 12:07:30 by yriffard          #+#    #+#             */
-/*   Updated: 2026/06/23 12:40:46 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/12 17:19:13 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <string.h>
-#include <stdio.h>
+#include "parsing.h"
 
 int	scheduler_checker(char *argv)
 

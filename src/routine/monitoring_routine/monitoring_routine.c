@@ -6,11 +6,11 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/25 16:02:13 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/11 15:36:05 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/12 17:19:38 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "monitoring_routine.h"
+#include "monitoring.h"
 
 void	*monitoring_routine(void* monitoring)
 {

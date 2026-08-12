@@ -3,8 +3,8 @@
 
 # include "monitoring.h"
 # include "dongle.h"
-# include "coder_routine.h"
 # include <pthread.h>
+# include "stdio.h"
 
 typedef struct monitor t_monitoring;
 
@@ -19,6 +19,16 @@ typedef struct coder
 	long			last_compile;
 } t_coder;
 
+
+long	ft_get_time();
+void	*coder_routine(void *v_coder);
+void 	print_log(char *string, t_coder *coder);
+void	ft_usleep(long time_in_ms, t_monitoring *monitor);
+int		is_schedule(t_coder *coder, t_dongle *first_dongle, t_dongle *second_dongle);
+void	scheduler_choose_and_update(t_coder *coder);
+
+void	edf_queue(t_coder *coder);
+void	fifo_queue(t_coder *coder);
 int		coder_thread_join(int coders_nb, pthread_t *coder_th);
 t_coder	*coder_list_init(int coders_nb, t_dongle *dongle_list, t_monitoring *monitor);
 

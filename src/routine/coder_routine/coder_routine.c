@@ -6,11 +6,11 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/25 16:04:18 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/12 17:11:44 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/12 17:16:33 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "coder_routine.h"
+#include "coder.h"
 
 int	dongles_are_available(t_dongle *first_dongle, t_dongle *second_dongle,  t_coder *coder)
 {

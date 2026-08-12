@@ -2,9 +2,11 @@
 # define MONITORING_H
 
 # include "coder.h"
-# include "monitoring_routine.h"
 # include <pthread.h>
 # include <stdlib.h>
+# include "sys/time.h"
+# include <string.h>
+# include <unistd.h>
 
 typedef struct coder t_coder;
 typedef struct s_dongle t_dongle;
@@ -33,6 +35,9 @@ typedef struct monitor
 	pthread_cond_t	*monitor_cond;
 	t_dongle		*dongle_list;
 } t_monitoring;
+
+void			*monitoring_routine(void* monitor);
+void			print_log(char *string, t_coder *coder);
 
 int				monitoring_th_creation(t_monitoring *monitor, pthread_t *monitoring_th);
 int				coder_th_creation(t_coder *coder_list, int coders_nb, pthread_t *coder_th, t_monitoring *monitor);

@@ -3,10 +3,10 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdio.h>
-# include "checker.h"
+#include <string.h>
 
-// parsing.c
-int		parsing(int argc, char **argv);
+int	parsing(int argc, char **argv);
 int	parsing_message(int argc, char **argv);
-
+int	is_number_checker(char *argv);
+int	scheduler_checker(char *argv);
 #endif
