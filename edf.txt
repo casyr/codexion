@@ -1,0 +1,90 @@
+1 1 has taken a dongle
+2 1 has taken a dongle
+2 1 is compiling
+6 1 is debugging
+8 2 has taken a dongle
+8 2 has taken a dongle
+8 2 is compiling
+10 1 is refactoring
+12 2 is debugging
+14 3 has taken a dongle
+14 3 has taken a dongle
+14 3 is compiling
+16 2 is refactoring
+18 3 is debugging
+20 4 has taken a dongle
+20 4 has taken a dongle
+20 4 is compiling
+22 3 is refactoring
+24 4 is debugging
+26 5 has taken a dongle
+26 5 has taken a dongle
+26 5 is compiling
+28 4 is refactoring
+30 5 is debugging
+32 6 has taken a dongle
+32 6 has taken a dongle
+32 6 is compiling
+34 5 is refactoring
+36 6 is debugging
+38 1 has taken a dongle
+38 1 has taken a dongle
+38 1 is compiling
+40 6 is refactoring
+42 1 is debugging
+44 2 has taken a dongle
+44 2 has taken a dongle
+44 2 is compiling
+46 1 is refactoring
+48 2 is debugging
+50 3 has taken a dongle
+50 3 has taken a dongle
+50 3 is compiling
+52 2 is refactoring
+54 3 is debugging
+56 4 has taken a dongle
+56 4 has taken a dongle
+56 4 is compiling
+58 3 is refactoring
+60 4 is debugging
+62 5 has taken a dongle
+62 5 has taken a dongle
+62 5 is compiling
+64 4 is refactoring
+66 5 is debugging
+68 6 has taken a dongle
+68 6 has taken a dongle
+68 6 is compiling
+70 5 is refactoring
+72 6 is debugging
+74 1 has taken a dongle
+74 1 has taken a dongle
+74 1 is compiling
+76 6 is refactoring
+78 1 is debugging
+80 2 has taken a dongle
+80 2 has taken a dongle
+80 2 is compiling
+82 1 is refactoring
+84 2 is debugging
+86 3 has taken a dongle
+86 3 has taken a dongle
+86 3 is compiling
+88 2 is refactoring
+90 3 is debugging
+92 4 has taken a dongle
+92 4 has taken a dongle
+92 4 is compiling
+94 3 is refactoring
+96 4 is debugging
+98 5 has taken a dongle
+98 5 has taken a dongle
+98 5 is compiling
+100 4 is refactoring
+102 5 is debugging
+104 6 has taken a dongle
+104 6 has taken a dongle
+104 6 is compiling
+106 5 is refactoring
+108 6 is debugging
+112 6 is refactoring

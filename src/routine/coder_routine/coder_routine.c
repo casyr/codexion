@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/25 16:04:18 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/12 11:30:10 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/12 17:11:44 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,18 +18,26 @@ int	dongles_are_available(t_dongle *first_dongle, t_dongle *second_dongle,  t_co
 	// printf("right: %p", coder->right_dongle->dongle_mutex);
 	pthread_mutex_lock(first_dongle->dongle_mutex);
 	pthread_mutex_lock(second_dongle->dongle_mutex);
+	pthread_mutex_lock(coder->monitor->monitor_mutex);
 	scheduler_choose_and_update(coder);
 	if (coder->monitor->total_compile_counter == 0 &&
 		coder->left_dongle->is_free == true &&
 		coder->right_dongle->is_free == true && 
 		is_schedule(coder, first_dongle, second_dongle) == 0)
+	{
+		pthread_mutex_unlock(coder->monitor->monitor_mutex);
 		return (0);
+	}
 	if (coder->left_dongle->is_free == true &&
 		coder->right_dongle->is_free == true &&
 		ft_get_time() - coder->right_dongle->last_release > coder->monitor->dongle_cooldown &&
 		ft_get_time() - coder->left_dongle->last_release > coder->monitor->dongle_cooldown && 
 		is_schedule(coder, first_dongle, second_dongle) == 0)
+	{
+		pthread_mutex_unlock(coder->monitor->monitor_mutex);
 		return (0);
+	}
+	pthread_mutex_unlock(coder->monitor->monitor_mutex);
 	pthread_mutex_unlock(first_dongle->dongle_mutex);
 	pthread_mutex_unlock(second_dongle->dongle_mutex);
 	return (1);
@@ -97,9 +105,9 @@ void	coder_action(t_coder *coder)
 	print_log("is compiling", coder);
 	ft_usleep(time_to_compile, coder->monitor);
 	coder->compile_count++;
-	coder->monitor->total_compile_counter ++;
 
 	pthread_mutex_lock(coder->monitor->monitor_mutex);
+	coder->monitor->total_compile_counter++;
 	coder->last_compile = ft_get_time();
 	coder->monitor->last_dongle_release = ft_get_time(); ////// supprrr???
 	pthread_mutex_unlock(coder->monitor->monitor_mutex);

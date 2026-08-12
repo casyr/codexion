@@ -12,4 +12,7 @@ void 	print_log(char *string, t_coder *coder);
 void	ft_usleep(long time_in_ms, t_monitoring *monitor);
 int		is_schedule(t_coder *coder, t_dongle *first_dongle, t_dongle *second_dongle);
 void	scheduler_choose_and_update(t_coder *coder);
+
+void	edf_queue(t_coder *coder);
+void	fifo_queue(t_coder *coder);
 #endif
