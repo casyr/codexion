@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/08/13 12:08:48 by yriffard          #+#    #+#             */
+/*   Updated: 2026/08/13 12:08:49 by yriffard         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "coder.h"
 
 long	ft_get_time()
@@ -10,7 +22,6 @@ long	ft_get_time()
 	result = (current_time.tv_sec * 1000) + (current_time.tv_usec / 1000);
 	return (result);
 }
-
 
 int		coder_are_ready(t_coder *coder_list, int coder_nb)
 {
@@ -25,8 +36,6 @@ int		coder_are_ready(t_coder *coder_list, int coder_nb)
 			count += 1;
 		i++;
 	}
-	
-	// printf("%d / %d\n", count, coder_nb);
 	if (count == coder_nb)
 		return (1);
 	return (0);

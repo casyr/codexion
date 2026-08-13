@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 08:21:18 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/13 09:48:30 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/13 12:08:25 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ void free_all(t_monitoring *monitor,
 			free(monitor->print_mutex);
 		free(monitor);
 	}
-
 	if (dongle_list)
 	{
 		while (i < coders_nb)
@@ -39,7 +38,6 @@ void free_all(t_monitoring *monitor,
 		}
 		free(dongle_list);
 	}
-
 	if (coder_list)
 		free(coder_list);
 
@@ -47,7 +45,7 @@ void free_all(t_monitoring *monitor,
 		free(coder_th);
 }
 
-void destroy_all(t_monitoring *monitor, t_dongle *dongle_list, int coders_nb)
+void	destroy_all(t_monitoring *monitor, t_dongle *dongle_list, int coders_nb)
 {
 	int	i;
 
@@ -61,10 +59,10 @@ void destroy_all(t_monitoring *monitor, t_dongle *dongle_list, int coders_nb)
 		if (monitor->print_mutex)
 			pthread_mutex_destroy(monitor->print_mutex);
 	}
-	while(i < coders_nb)
+	while (i < coders_nb)
 	{
 		if (!dongle_list)
-			break;
+			break ;
 		if (dongle_list[i].dongle_mutex)
 			pthread_mutex_destroy(dongle_list[i].dongle_mutex);
 		i++;
@@ -106,7 +104,7 @@ int	main(int argc, char **argv)
 		return (3);
 	}
 	dongle_list = dongle_list_init(coders_nb);
-	if(!dongle_list)
+	if (!dongle_list)
 	{
 		printf("error malloc dongle_list");
 		destroy_all(monitor, dongle_list, coders_nb);
@@ -114,14 +112,13 @@ int	main(int argc, char **argv)
 		return (4);
 	}
 	monitor = monitoring_init(argv, dongle_list, start_time);
-	if(!monitor)
+	if (!monitor)
 	{
 		printf("error monitor init");
 		destroy_all(monitor, dongle_list, coders_nb);
 		free_all(monitor, dongle_list, coder_th, coder_list, coders_nb);
 		return (4);
 	}
-
 	coder_list = coder_list_init(coders_nb, dongle_list, monitor);
 	if (!coder_list)
 	{
@@ -130,25 +127,21 @@ int	main(int argc, char **argv)
 		free_all(monitor, dongle_list, coder_th, coder_list, coders_nb);
 		return (5);
 	}
-
 	monitor->coder_list = coder_list;
-
-	if(monitoring_th_creation(monitor, &monitoring_th) != 0)
+	if (monitoring_th_creation(monitor, &monitoring_th) != 0)
 	{
 		printf("error monitor thread");
 		destroy_all(monitor, dongle_list, coders_nb);
 		free_all(monitor, dongle_list, coder_th, coder_list, coders_nb);
 		return (6);
 	}
-
-	if(coder_th_creation(coder_list, coders_nb, coder_th, monitor) != 0)
+	if (coder_th_creation(coder_list, coders_nb, coder_th, monitor) != 0)
 	{
 		printf("error coder thread");
 		destroy_all(monitor, dongle_list, coders_nb);
 		free_all(monitor, dongle_list, coder_th, coder_list, coders_nb);
 		return (7);
 	}
-
 	coder_thread_join(coders_nb, coder_th);
 	if (pthread_join(monitoring_th, NULL) != 0)
 	{
@@ -158,7 +151,5 @@ int	main(int argc, char **argv)
 	}
 	destroy_all(monitor, dongle_list, coders_nb);
 	free_all(monitor, dongle_list, coder_th, coder_list, coders_nb);
-
 	return (0);
 }
-
