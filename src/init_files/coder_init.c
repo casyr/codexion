@@ -6,28 +6,11 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/04 09:04:49 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/13 09:42:04 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/13 16:37:52 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "coder.h"
-
-int	coder_thread_join(int coders_nb, pthread_t *coder_th)
-{
-	int	coder_index;
-
-	coder_index = 0;
-	while (coder_index < coders_nb)
-	{
-		if (pthread_join(coder_th[coder_index], NULL) != 0)
-		{
-			printf("coder %d thread JOIN fails\n", coder_index);
-			return (1);
-		}
-		coder_index++;
-	}
-	return (0);
-}
 
 t_coder	*coder_list_init(int coders_nb, t_dongle *dongle_list,
 	t_monitoring *monitor)
@@ -63,6 +46,13 @@ int	coder_th_creation(t_coder *coder_list, int coders_nb, pthread_t *coder_th,
 {
 	int				coder_index;
 
+	coder_th = malloc(coders_nb * sizeof(pthread_t));
+	if (!coder_th)
+	{
+		printf("malloc fails");
+		return (3);
+	}
+	monitor->coder_th = coder_th;
 	coder_index = 0;
 	while (coder_index < coders_nb)
 	{

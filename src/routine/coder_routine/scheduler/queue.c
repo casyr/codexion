@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/11 17:52:16 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/13 10:55:51 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/13 19:06:07 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ void	scheduler_choose_and_update(t_coder *coder)
 
 int	is_schedule(t_coder *coder, t_dongle *first_dongle, t_dongle *second_dongle)
 {
-	if (coder->id == (
-			first_dongle->queue[1] && coder->id == second_dongle->queue[1]))
+	if ((coder->id == 
+			first_dongle->queue[1]) && (coder->id == second_dongle->queue[1]))
 		return (0);
 	return (1);
 }

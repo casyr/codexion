@@ -6,15 +6,17 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/04 09:05:08 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/13 10:59:46 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/13 18:41:58 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../header_files/monitoring.h"
 
-int	monitoring_th_creation(t_monitoring *monitor, pthread_t *monitoring_th)
+int	monitoring_th_creation(t_monitoring *monitor)
 {
-	if (pthread_create(monitoring_th, NULL, &monitoring_routine, monitor) != 0)
+	pthread_t	monitoring_th;
+
+	if (pthread_create(&monitor->monitor_th, NULL, &monitoring_routine, monitor) != 0)
 	{
 		printf("monitoring thread CREATION fails");
 		return (1);
@@ -85,11 +87,8 @@ void	*monitoring_fill_data(char	**argv, t_dongle *dongle_list,
 }
 
 t_monitoring	*monitoring_init(char **argv, t_dongle *dongle_list,
-	long start_time)
+	long start_time, t_monitoring *monitor)
 {
-	t_monitoring	*monitor;
-
-	monitor = malloc(sizeof(t_monitoring));
 	if (!monitor)
 		return (NULL);
 	if (!monitoring_fill_data(argv, dongle_list, start_time, monitor))

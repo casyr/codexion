@@ -1,7 +1,7 @@
 NAME = codexion
-CC = cc
+CC = gcc
 CFLAGS = -Wall -Wextra -Werror -pthread -MMD -MP -g
-CFLAGS = -g #-fsanitize=address -pthread
+CFLAGS = -g -fsanitize=address -pthread
 BIN_DIR = src/.bin
 
 HEADER_FILES = header_files 
@@ -17,6 +17,7 @@ SRC = $(PARSING_FILE) \
 		src/utils.c \
 		src/routine/coder_routine/coder_routine.c \
 		src/routine/coder_routine/coder_routine_utils.c \
+		src/routine/coder_routine/coder_routine_utils_2.c \
 		src/routine/coder_routine/scheduler/queue.c \
 		src/routine/coder_routine/scheduler/edf.c \
 		src/routine/coder_routine/scheduler/fifo.c \
