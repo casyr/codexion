@@ -6,11 +6,22 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/05 11:01:45 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/12 17:11:02 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/13 10:03:42 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "dongle.h"
+
+void	dongle_list_destroy(int i, t_dongle *dongle_list)
+{
+	while (i > 0)
+	{
+		i--;
+		pthread_mutex_destroy(dongle_list[i].dongle_mutex);
+		free(dongle_list[i].dongle_mutex);
+	}
+	free(dongle_list);
+}
 
 t_dongle	*dongle_list_init(int coders_nb)
 {
@@ -29,19 +40,13 @@ t_dongle	*dongle_list_init(int coders_nb)
 		dongle_list[i].id = i + 1;
 		dongle_list[i].is_free = true;
 		dongle_list[i].dongle_mutex = malloc(sizeof(pthread_mutex_t));
-		dongle_list[i].last_release = ft_get_time();
 		if (!dongle_list[i].dongle_mutex)
 		{
-			while (i >= 0)
-			{
-				pthread_mutex_destroy(dongle_list[i].dongle_mutex);
-				free(dongle_list[i].dongle_mutex);
-				i--;
-			}
-			free(dongle_list);
+			dongle_list_destroy(i, dongle_list);
 			return (NULL);
 		}
 		pthread_mutex_init(dongle_list[i].dongle_mutex, NULL);
+		dongle_list[i].last_release = ft_get_time();
 		i++;
 	}
 	return (dongle_list);
