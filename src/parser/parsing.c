@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 08:21:32 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/13 10:25:53 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/14 16:05:16 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,6 @@ int	is_int(char *str)
 
 int	parsing(int argc, char **argv)
 {
-	int	i;
-
-	i = 0;
 	if (argc != 9)
 		return (1);
 	if (is_number_checker(argv[1]) != 0 || is_int(argv[1]) == 1)

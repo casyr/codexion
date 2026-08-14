@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 08:21:18 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/14 11:52:39 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/14 16:29:52 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,8 @@ int	init_structs(t_monitoring *monitor, int coders_nb,
 {
 	t_coder			*coder_list;
 	t_dongle		*dongle_list;
-	pthread_t		*coder_th;
 
 	coder_list = NULL;
-	coder_th = NULL;
 	dongle_list = NULL;
 	monitoring_init(argv, dongle_list, start_time, monitor);
 	if (!monitor)
@@ -93,7 +91,6 @@ int	threads_join(t_monitoring *monitor)
 int	main(int argc, char **argv)
 {
 	int				coders_nb;
-	int				compiling_nb;
 	long			start_time;
 	t_monitoring	*monitor;
 
@@ -102,7 +99,6 @@ int	main(int argc, char **argv)
 	if (parsing_message(argc, argv) != 0)
 		return (1);
 	coders_nb = atoi(argv[1]);
-	compiling_nb = atoi(argv[6]);
 	if (init_structs(monitor, coders_nb, start_time, argv))
 		return (1);
 	if (threads_creation(monitor))

@@ -6,42 +6,32 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/12 13:48:57 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/14 10:28:07 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/14 18:25:42 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "coder.h"
 
-void	fill_left_dongle_edf(t_coder *coder, t_coder *left_coder,
-	long middle_c_last_comp, long left_c_last_comp)
-{
-	if (strcmp(left_coder->status, "FINISH") == 0
-		|| middle_c_last_comp < left_c_last_comp
-		|| (middle_c_last_comp == left_c_last_comp
-			&& coder->id < left_coder->id))
-	{
-		coder->left_dongle->queue[0] = left_coder->id;
-		coder->left_dongle->queue[1] = coder->id;
-		return ;
-	}
-	coder->left_dongle->queue[0] = coder->id;
-	coder->left_dongle->queue[1] = left_coder->id;
-}
-
 void	fill_right_dongle_edf(t_coder *coder, t_coder *right_coder,
-	long middle_c_last_comp, long right_c_last_comp)
+		long middle_c_last_comp, long right_c_last_comp)
 {
-	if (strcmp(right_coder->status, "FINISH") == 0
-		|| middle_c_last_comp < right_c_last_comp
-		|| (middle_c_last_comp == right_c_last_comp
-			&& coder->id < right_coder->id))
+	if (strcmp(coder->status, "FINISH") == 0)
 	{
 		coder->right_dongle->queue[0] = right_coder->id;
 		coder->right_dongle->queue[1] = coder->id;
 		return ;
 	}
-	coder->right_dongle->queue[0] = coder->id;
-	coder->right_dongle->queue[1] = right_coder->id;
+	if (strcmp(right_coder->status, "FINISH") == 0
+		|| middle_c_last_comp < right_c_last_comp
+		|| (middle_c_last_comp == right_c_last_comp
+			&& coder->id < right_coder->id))
+	{
+		coder->right_dongle->queue[0] = coder->id;
+		coder->right_dongle->queue[1] = right_coder->id;
+		return ;
+	}
+	coder->right_dongle->queue[0] = right_coder->id;
+	coder->right_dongle->queue[1] = coder->id;
 }
 
 void	edf_queue(t_coder *coder)
@@ -64,8 +54,6 @@ void	edf_queue(t_coder *coder)
 	right_c_last_comp = right_coder->last_compile;
 	left_c_last_comp = left_coder->last_compile;
 	middle_c_last_comp = coder->last_compile;
-	fill_left_dongle_edf(coder, left_coder, middle_c_last_comp,
-		left_c_last_comp);
 	fill_right_dongle_edf(coder, right_coder, middle_c_last_comp,
 		right_c_last_comp);
 }

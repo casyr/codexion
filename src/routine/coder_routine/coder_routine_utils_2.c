@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/13 14:13:33 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/13 17:48:09 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/14 18:39:28 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,13 @@ void	print_log(char *string, t_coder *coder)
 int	dongles_are_available_cond(t_coder *coder, t_dongle *first_dongle,
 	t_dongle *second_dongle)
 {
+	pthread_mutex_lock(coder->monitor->monitor_mutex);
 	if (coder->monitor->total_compile_counter == 0
 		&& coder->left_dongle->is_free == true
 		&& coder->right_dongle->is_free == true
 		&& is_schedule(coder, first_dongle, second_dongle) == 0)
 	{
+		pthread_mutex_unlock(coder->monitor->monitor_mutex);
 		return (0);
 	}
 	if (coder->left_dongle->is_free == true
@@ -47,24 +49,19 @@ int	dongles_are_available_cond(t_coder *coder, t_dongle *first_dongle,
 			> coder->monitor->dongle_cooldown)
 		&& is_schedule(coder, first_dongle, second_dongle) == 0)
 	{
+		pthread_mutex_unlock(coder->monitor->monitor_mutex);
 		return (0);
 	}
+	pthread_mutex_unlock(coder->monitor->monitor_mutex);
 	return (1);
 }
 
 int	dongles_are_available(t_dongle *first_dongle, t_dongle *second_dongle,
 	t_coder *coder)
 {
-	pthread_mutex_lock(first_dongle->dongle_mutex);
-	pthread_mutex_lock(second_dongle->dongle_mutex);
-	pthread_mutex_lock(coder->monitor->monitor_mutex);
 	scheduler_choose_and_update(coder);
 	if (dongles_are_available_cond(coder, first_dongle, second_dongle) == 0)
-	{
-		pthread_mutex_unlock(coder->monitor->monitor_mutex);
 		return (0);
-	}
-	pthread_mutex_unlock(coder->monitor->monitor_mutex);
 	pthread_mutex_unlock(first_dongle->dongle_mutex);
 	pthread_mutex_unlock(second_dongle->dongle_mutex);
 	return (1);

@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/05 11:01:45 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/14 11:53:34 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/14 16:07:01 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,9 @@ void	dongle_list_destroy(int i, t_dongle *dongle_list)
 t_dongle	*dongle_list_init(int coders_nb)
 {
 	t_dongle		*dongle_list;
-	pthread_mutex_t	*dongle_mutex;
 	int				i;
 
 	i = 0;
-	dongle_mutex = NULL;
 	dongle_list = NULL;
 	dongle_list = malloc(sizeof(t_dongle) * coders_nb);
 	if (!dongle_list)
