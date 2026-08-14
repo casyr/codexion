@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/25 16:02:13 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/13 18:02:55 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/14 11:43:01 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	burn_out_loop_checker(t_monitoring *monitor, long time)
 	while (i < monitor->coders_nb)
 	{
 		if ((time - monitor->coder_list[i].last_compile)
-				> monitor->time_to_burnout)
+			> monitor->time_to_burnout || monitor->coders_nb == 1)
 		{
 			monitor->status = "BURNOUT";
 			printf("%li %i burned out\n",
@@ -62,6 +62,7 @@ void	monitoring_loop(t_monitoring *monitor)
 void	*monitoring_routine(void *monitoring)
 {
 	t_monitoring	*monitor;
+	long			time;
 
 	monitor = (t_monitoring *) monitoring;
 	pthread_mutex_lock(monitor->monitor_mutex);
@@ -69,6 +70,9 @@ void	*monitoring_routine(void *monitoring)
 	{
 		if (strcmp(monitor->status, "BURNOUT") == 0)
 		{
+			time = ft_get_time();
+			printf("%li %i burned out\n",
+				time - monitor->start_time, monitor->coder_list[0].id);
 			pthread_mutex_unlock(monitor->monitor_mutex);
 			return (NULL);
 		}

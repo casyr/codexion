@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 08:21:18 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/13 18:39:28 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/14 11:28:38 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ int	inits_fails(t_monitoring *monitor)
 	return (1);
 }
 
-int	init_structs(t_monitoring *monitor, int coders_nb, long start_time, char **argv)
+int	init_structs(t_monitoring *monitor, int coders_nb,
+	long start_time, char **argv)
 {
 	t_coder			*coder_list;
 	t_dongle		*dongle_list;
@@ -43,8 +44,9 @@ int	init_structs(t_monitoring *monitor, int coders_nb, long start_time, char **a
 	return (0);
 }
 
-int	threads_creation(t_monitoring *monitor, int coders_nb)
+int	threads_creation(t_monitoring *monitor)
 {
+	
 	if (monitoring_th_creation(monitor) != 0)
 	{
 		printf("error monitor thread");
@@ -52,8 +54,7 @@ int	threads_creation(t_monitoring *monitor, int coders_nb)
 		free_all(monitor);
 		return (1);
 	}
-	if (coder_th_creation(monitor->coder_list,
-			coders_nb, monitor->coder_th, monitor) != 0)
+	if (coder_th_creation(monitor) != 0)
 	{
 		printf("error coder thread");
 		destroy_all(monitor);
@@ -104,7 +105,7 @@ int	main(int argc, char **argv)
 	compiling_nb = atoi(argv[6]);
 	if (init_structs(monitor, coders_nb, start_time, argv))
 		return (1);
-	if (threads_creation(monitor, coders_nb))
+	if (threads_creation(monitor))
 		return (1);
 	if (threads_join(monitor))
 		return (1);
@@ -112,13 +113,3 @@ int	main(int argc, char **argv)
 	free_all(monitor);
 	return (0);
 }
-// if (coders_nb < 2)
-// {
-// 	printf("number of coders must be > 1");
-// 	return (1);
-// }
-// if (compiling_nb == 0)
-// {
-// 	printf("compiling number must be > 0");
-// 	return (2);
-// }

@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/13 16:13:43 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/13 18:40:53 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/14 11:26:54 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,7 @@ void			*monitoring_routine(void *monitor);
 void			print_log(char *string, t_coder *coder);
 
 int				monitoring_th_creation(t_monitoring *monitor);
-int				coder_th_creation(t_coder *coder_list, int coders_nb,
-					pthread_t *coder_th, t_monitoring *monitor);
+int				coder_th_creation(t_monitoring *monitor);
 int				monitor_thread_join(pthread_t monitoring_th);
 t_monitoring	*monitoring_init(char **argv, t_dongle *dongle_list,
 					long start_time, t_monitoring *monitor);

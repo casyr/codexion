@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/04 09:05:08 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/13 18:41:58 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/14 11:23:23 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,8 @@
 
 int	monitoring_th_creation(t_monitoring *monitor)
 {
-	pthread_t	monitoring_th;
-
-	if (pthread_create(&monitor->monitor_th, NULL, &monitoring_routine, monitor) != 0)
+	if (pthread_create(&monitor->monitor_th, NULL,
+			&monitoring_routine, monitor) != 0)
 	{
 		printf("monitoring thread CREATION fails");
 		return (1);

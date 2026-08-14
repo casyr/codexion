@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/13 12:08:48 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/13 18:43:55 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/14 10:32:45 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,5 +99,4 @@ void	destroy_all(t_monitoring *monitor)
 			i++;
 		}
 	}
-	
 }
