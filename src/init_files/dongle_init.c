@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/05 11:01:45 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/14 16:07:01 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/17 14:59:43 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ t_dongle	*dongle_list_init(int coders_nb)
 		}
 		pthread_mutex_init(dongle_list[i].dongle_mutex, NULL);
 		dongle_list[i].last_release = ft_get_time();
+		dongle_list[i].queue[0] = 0;
+		dongle_list[i].queue[1] = 0;
 		i++;
 	}
 	return (dongle_list);

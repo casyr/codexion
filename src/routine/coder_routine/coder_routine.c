@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/25 16:04:18 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/14 18:47:04 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/17 18:56:40 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,11 @@ void	coder_compiling(t_coder *coder, int time_to_compile,
 	coder->monitor->total_compile_counter++;
 	coder->last_compile = ft_get_time();
 	coder->monitor->last_dongle_release = ft_get_time();
-	pthread_mutex_unlock(coder->monitor->monitor_mutex);
 	first_dongle->is_free = true;
 	second_dongle->is_free = true;
 	coder->left_dongle->last_release = ft_get_time();
 	coder->right_dongle->last_release = ft_get_time();
-	pthread_mutex_unlock(first_dongle->dongle_mutex);
-	pthread_mutex_unlock(second_dongle->dongle_mutex);
+	pthread_mutex_unlock(coder->monitor->monitor_mutex);
 }
 
 void	coder_action(t_coder *coder, t_dongle *first_dongle,
@@ -42,10 +40,12 @@ void	coder_action(t_coder *coder, t_dongle *first_dongle,
 	time_to_compile = coder->monitor->time_to_compile;
 	time_to_debug = coder->monitor->time_to_debug;
 	time_to_refactor = coder->monitor->time_to_refactor;
-	pthread_mutex_unlock(coder->monitor->monitor_mutex);
 	first_dongle->is_free = false;
+	pthread_mutex_unlock(coder->monitor->monitor_mutex);
 	print_log("has taken a dongle", coder);
+	pthread_mutex_lock(coder->monitor->monitor_mutex);
 	second_dongle->is_free = false;
+	pthread_mutex_unlock(coder->monitor->monitor_mutex);
 	print_log("has taken a dongle", coder);
 	coder_compiling(coder, time_to_compile, first_dongle, second_dongle);
 	print_log("is debugging", coder);
@@ -73,6 +73,7 @@ void	coder_handling(t_coder *coder)
 	pthread_mutex_unlock(coder->monitor->monitor_mutex);
 	first_dongle = first_dongle_chooser(coder);
 	second_dongle = second_dongle_chooser(coder);
+	// printf("coder id %i, first dongle id %i , second dongle id %i\n", coder->id, first_dongle->id, second_dongle->id);
 	if (compile_count == target_compiling_nb)
 	{
 		coder_set_finish(coder);
@@ -96,7 +97,7 @@ void	coder_routine_start(t_coder *coder)
 		}
 		pthread_mutex_unlock(coder->monitor->monitor_mutex);
 		coder_handling(coder);
-		// usleep(200);
+		usleep(200);
 	}
 }
 
@@ -125,7 +126,10 @@ void	*coder_routine(void *v_coder)
 	}
 	pthread_mutex_unlock(coder->monitor->monitor_mutex);
 	if (coder->id % 2 == 0)
+	{
 		usleep(1000);
+		coder->last_compile += 10;
+	}
 	coder_routine_start(coder);
 	return (NULL);
 }

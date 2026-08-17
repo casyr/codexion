@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/13 14:13:33 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/14 18:39:28 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/17 14:24:51 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,5 @@ int	dongles_are_available(t_dongle *first_dongle, t_dongle *second_dongle,
 	scheduler_choose_and_update(coder);
 	if (dongles_are_available_cond(coder, first_dongle, second_dongle) == 0)
 		return (0);
-	pthread_mutex_unlock(first_dongle->dongle_mutex);
-	pthread_mutex_unlock(second_dongle->dongle_mutex);
 	return (1);
 }
