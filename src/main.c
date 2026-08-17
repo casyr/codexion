@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 08:21:18 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/14 16:29:52 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/17 19:01:29 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ int	init_structs(t_monitoring *monitor, int coders_nb,
 
 int	threads_creation(t_monitoring *monitor)
 {
-	
 	if (monitoring_th_creation(monitor) != 0)
 	{
 		printf("error monitor thread");

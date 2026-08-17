@@ -6,13 +6,13 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/12 13:48:57 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/17 18:54:39 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/17 19:02:40 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "coder.h"
 
-static int has_priority(t_coder *a, t_coder *b)
+static int	has_priority(t_coder *a, t_coder *b)
 {
 	if (a->last_compile != b->last_compile)
 		return (a->last_compile < b->last_compile);
@@ -21,7 +21,7 @@ static int has_priority(t_coder *a, t_coder *b)
 	return (a->id < b->id);
 }
 
-void fill_right_dongle(t_coder *coder, t_coder *right_coder)
+void	fill_right_dongle(t_coder *coder, t_coder *right_coder)
 {
 	if (has_priority(coder, right_coder))
 	{
@@ -35,7 +35,7 @@ void fill_right_dongle(t_coder *coder, t_coder *right_coder)
 	}
 }
 
-void fill_left_dongle(t_coder *coder, t_coder *left_coder)
+void	fill_left_dongle(t_coder *coder, t_coder *left_coder)
 {
 	if (has_priority(coder, left_coder))
 	{
@@ -53,7 +53,7 @@ void	edf_queue(t_coder *coder)
 {
 	t_coder	*right_coder;
 	t_coder	*left_coder;
-	
+
 	if (coder->id == 1)
 		left_coder = &(
 				coder->monitor->coder_list[coder->monitor->coders_nb - 1]);

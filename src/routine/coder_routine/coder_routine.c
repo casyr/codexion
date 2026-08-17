@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/25 16:04:18 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/17 18:56:40 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/17 19:01:38 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,6 @@ void	coder_handling(t_coder *coder)
 	pthread_mutex_unlock(coder->monitor->monitor_mutex);
 	first_dongle = first_dongle_chooser(coder);
 	second_dongle = second_dongle_chooser(coder);
-	// printf("coder id %i, first dongle id %i , second dongle id %i\n", coder->id, first_dongle->id, second_dongle->id);
 	if (compile_count == target_compiling_nb)
 	{
 		coder_set_finish(coder);
@@ -125,11 +124,7 @@ void	*coder_routine(void *v_coder)
 			coder->monitor->monitor_mutex);
 	}
 	pthread_mutex_unlock(coder->monitor->monitor_mutex);
-	if (coder->id % 2 == 0)
-	{
-		usleep(1000);
-		coder->last_compile += 10;
-	}
+	coder_bump(coder);
 	coder_routine_start(coder);
 	return (NULL);
 }
