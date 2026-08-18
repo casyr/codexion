@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/13 14:13:33 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/17 19:02:24 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/18 09:56:35 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,5 @@ int	dongles_are_available(t_dongle *first_dongle, t_dongle *second_dongle,
 void	coder_bump(t_coder *coder)
 {
 	if (coder->id % 2 == 0)
-	{
-		usleep(1000);
-		coder->last_compile += 10;
-	}
+		usleep(100);
 }
