@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/12 13:48:57 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/18 09:53:02 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/18 10:50:09 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,10 @@ static int	has_priority(t_coder *a, t_coder *b)
 		return (a->last_compile < b->last_compile);
 	if (a->compile_count != b->compile_count)
 		return (a->compile_count < b->compile_count);
+	if (a->compile_count == 0 && b->compile_count == 0)
+		return (1);
 	return (a->id < b->id);
-} 
+}
 
 void	fill_right_dongle(t_coder *coder, t_coder *right_coder)
 {
