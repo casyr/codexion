@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/13 12:08:48 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/14 10:32:45 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/19 13:59:43 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,17 +41,6 @@ int	coder_are_ready(t_coder *coder_list, int coder_nb)
 	return (0);
 }
 
-void	monitor_free(t_monitoring *monitor)
-{
-	if (monitor->monitor_mutex)
-		free(monitor->monitor_mutex);
-	if (monitor->monitor_cond)
-		free(monitor->monitor_cond);
-	if (monitor->print_mutex)
-		free(monitor->print_mutex);
-	free(monitor);
-}
-
 void	free_all(t_monitoring *monitor)
 {
 	int	i;
@@ -61,19 +50,12 @@ void	free_all(t_monitoring *monitor)
 		i = 0;
 		if (monitor->dongle_list)
 		{
-			while (i < monitor->coders_nb)
-			{
-				if (monitor->dongle_list[i].dongle_mutex)
-					free(monitor->dongle_list[i].dongle_mutex);
-				i++;
-			}
 			free(monitor->dongle_list);
 		}
 		if (monitor->coder_list)
 			free(monitor->coder_list);
 		if (monitor->coder_th)
 			free(monitor->coder_th);
-		monitor_free(monitor);
 	}
 }
 
@@ -84,19 +66,25 @@ void	destroy_all(t_monitoring *monitor)
 	i = 0;
 	if (monitor)
 	{
-		if (monitor->monitor_cond)
-			pthread_cond_destroy(monitor->monitor_cond);
-		if (monitor->monitor_mutex)
-			pthread_mutex_destroy(monitor->monitor_mutex);
-		if (monitor->print_mutex)
-			pthread_mutex_destroy(monitor->print_mutex);
+		if (&(monitor->monitor_cond))
+			pthread_cond_destroy(&(monitor->monitor_cond));
+		if (&(monitor->monitor_mutex))
+			pthread_mutex_destroy(&(monitor->monitor_mutex));
+		if (&(monitor->print_mutex))
+			pthread_mutex_destroy(&(monitor->print_mutex));
 		while (i < monitor->coders_nb)
 		{
 			if (!monitor->dongle_list)
 				break ;
-			if (monitor->dongle_list[i].dongle_mutex)
-				pthread_mutex_destroy(monitor->dongle_list[i].dongle_mutex);
+			if (&(monitor->dongle_list[i].dongle_mutex))
+				pthread_mutex_destroy(&(monitor->dongle_list[i].dongle_mutex));
 			i++;
 		}
 	}
+}
+
+void	destroy_and_free(t_monitoring *monitor)
+{
+	free_all(monitor);
+	destroy_all(monitor);
 }

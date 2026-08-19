@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/13 16:13:43 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/17 14:01:48 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/19 14:56:35 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,20 @@ typedef struct s_dongle	t_dongle;
 typedef struct monitor
 {
 	long			last_compile;
-	long			time_to_burnout;
+	long			start_time;
+	long			last_dongle_release;
+
 	int				compiling_nb;
 	int				coders_nb;
 	int				time_to_compile;
 	int				time_to_refactor;
 	int				time_to_debug;
 	int				dongle_cooldown;
+	long			time_to_burnout;
+
 	char			*scheduler;
-	long			start_time;
-	long			last_dongle_release;
+	char			*status;
+
 	int				finished_coders_nb;
 	int				total_compile_counter;
 
@@ -44,10 +48,10 @@ typedef struct monitor
 
 	t_coder			*coder_list;
 
-	pthread_mutex_t	*print_mutex;
-	char			*status;
-	pthread_mutex_t	*monitor_mutex;
-	pthread_cond_t	*monitor_cond;
+	pthread_mutex_t	print_mutex;
+
+	pthread_mutex_t	monitor_mutex;
+	pthread_cond_t	monitor_cond;
 	t_dongle		*dongle_list;
 }	t_monitoring;
 
@@ -57,7 +61,7 @@ void			print_log(char *string, t_coder *coder);
 int				monitoring_th_creation(t_monitoring *monitor);
 int				coder_th_creation(t_monitoring *monitor);
 int				monitor_thread_join(pthread_t monitoring_th);
-t_monitoring	*monitoring_init(char **argv, t_dongle *dongle_list,
+void			*monitoring_init(char **argv, t_dongle *dongle_list,
 					long start_time, t_monitoring *monitor);
 long			ft_get_time(void);
 int				coder_are_ready(t_coder *coder_list, int coder_nb);

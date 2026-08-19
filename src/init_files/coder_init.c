@@ -6,22 +6,18 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/04 09:04:49 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/14 16:37:34 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/19 15:15:32 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "coder.h"
 
 t_coder	*coder_list_init(int coders_nb, t_dongle *dongle_list,
-	t_monitoring *monitor)
+	t_monitoring *monitor, t_coder *coder_list)
 {
-	t_coder			*coder_list;
 	int				coder_index;
 	t_coder			*coder;
 
-	coder_list = malloc(sizeof(t_coder) * coders_nb);
-	if (!coder_list)
-		return (NULL);
 	coder_index = 0;
 	while (coder_index < coders_nb)
 	{
@@ -34,7 +30,7 @@ t_coder	*coder_list_init(int coders_nb, t_dongle *dongle_list,
 		coder->left_dongle = &(dongle_list[coder_index - 1]);
 		coder->last_compile = ft_get_time();
 		if (coder_index == 0)
-			coder->left_dongle = &(dongle_list[coders_nb - 1]);
+			coder->left_dongle = &(dongle_list[coders_nb - 1]); /// a verifier si ca sers car je refais plus atrd
 		coder_index++;
 	}
 	return (coder_list);
@@ -42,7 +38,7 @@ t_coder	*coder_list_init(int coders_nb, t_dongle *dongle_list,
 
 int	coder_th_creation(t_monitoring *monitor)
 {
-	int				coder_index;
+	int	coder_index;
 
 	monitor->coder_th = malloc(monitor->coders_nb * sizeof(pthread_t));
 	if (!monitor->coder_th)
@@ -61,10 +57,11 @@ int	coder_th_creation(t_monitoring *monitor)
 			return (1);
 		}
 		coder_index++;
+
 	}
-	pthread_mutex_lock(monitor->monitor_mutex);
+	pthread_mutex_lock(&(monitor->monitor_mutex));
 	monitor->status = "READY";
-	pthread_cond_signal(monitor->monitor_cond);
-	pthread_mutex_unlock(monitor->monitor_mutex);
+	pthread_cond_signal(&(monitor->monitor_cond));
+	pthread_mutex_unlock(&(monitor->monitor_mutex));
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 08:21:32 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/14 16:05:16 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/18 12:01:52 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,8 @@ int	parsing(int argc, char **argv)
 {
 	if (argc != 9)
 		return (1);
-	if (is_number_checker(argv[1]) != 0 || is_int(argv[1]) == 1)
+	if (is_number_checker(argv[1]) != 0 || is_int(argv[1]) == 1
+		|| atoi(argv[1]) == 0)
 		return (2);
 	if (is_number_checker(argv[2]) != 0 || is_int(argv[2]) == 1)
 		return (3);
@@ -78,7 +79,7 @@ int	parsing_message(int argc, char **argv)
 	if (parsed_data == 1)
 		printf("the number of args isn't correct.");
 	if (parsed_data == 2)
-		printf("numbers of coder didn't respect the format.");
+		printf("numbers of coder didn't respect the format (valid int > 0).");
 	if (parsed_data == 3)
 		printf("time to burnout didn't respect the format.");
 	if (parsed_data == 4)

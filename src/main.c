@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 08:21:18 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/17 19:01:29 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/19 14:06:51 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,22 +20,23 @@ int	inits_fails(t_monitoring *monitor)
 	return (1);
 }
 
-int	init_structs(t_monitoring *monitor, int coders_nb,
-	long start_time, char **argv)
+int	init_structs(t_monitoring *monitor, long start_time, char **argv)
 {
+	int				coders_nb;
 	t_coder			*coder_list;
 	t_dongle		*dongle_list;
 
+	coders_nb = atoi(argv[1]);
 	coder_list = NULL;
 	dongle_list = NULL;
 	monitoring_init(argv, dongle_list, start_time, monitor);
-	if (!monitor)
-		return (inits_fails(monitor));
-	dongle_list = dongle_list_init(coders_nb);
+	dongle_list = malloc(sizeof(t_dongle) * coders_nb);
+	dongle_list_init(coders_nb, dongle_list);
 	if (!dongle_list)
 		return (inits_fails(monitor));
 	monitor->dongle_list = dongle_list;
-	coder_list = coder_list_init(coders_nb, dongle_list, monitor);
+	coder_list = malloc(sizeof(t_coder) * coders_nb);
+	coder_list_init(coders_nb, dongle_list, monitor, coder_list);
 	if (!coder_list)
 		return (inits_fails(monitor));
 	monitor->coder_list = coder_list;
@@ -46,11 +47,12 @@ int	threads_creation(t_monitoring *monitor)
 {
 	if (monitoring_th_creation(monitor) != 0)
 	{
-		printf("error monitor thread");
+		printf("error monitor thread\n");
 		destroy_all(monitor);
 		free_all(monitor);
 		return (1);
 	}
+	// printf("monitoring th reussi\n");
 	if (coder_th_creation(monitor) != 0)
 	{
 		printf("error coder thread");
@@ -89,22 +91,34 @@ int	threads_join(t_monitoring *monitor)
 
 int	main(int argc, char **argv)
 {
-	int				coders_nb;
 	long			start_time;
-	t_monitoring	*monitor;
+	t_monitoring	monitor;
 
-	monitor = malloc(sizeof(t_monitoring));
 	start_time = ft_get_time();
 	if (parsing_message(argc, argv) != 0)
 		return (1);
-	coders_nb = atoi(argv[1]);
-	if (init_structs(monitor, coders_nb, start_time, argv))
+	// printf("init finish\n");
+	if (init_structs(&monitor, start_time, argv))
+	{
+		destroy_all(&monitor);
+		free_all(&monitor);
 		return (1);
-	if (threads_creation(monitor))
+	}
+	// printf("init finish\n");
+	if (threads_creation(&monitor))
+	{
+		destroy_all(&monitor);
+		free_all(&monitor);
 		return (1);
-	if (threads_join(monitor))
+	}
+	// printf("monitor and th create finish\n");
+	if (threads_join(&monitor))
+	{
+		destroy_all(&monitor);
+		free_all(&monitor);
 		return (1);
-	destroy_all(monitor);
-	free_all(monitor);
+	}
+	destroy_all(&monitor);
+	free_all(&monitor);
 	return (0);
 }
