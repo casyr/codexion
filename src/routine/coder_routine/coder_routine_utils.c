@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   coder_routine_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yriffard <yriffard@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/11 15:31:08 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/20 15:34:37 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/20 21:56:28 by yriffard         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
