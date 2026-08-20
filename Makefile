@@ -1,16 +1,12 @@
 NAME = codexion
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -pthread -MMD -MP -g
-# CFLAGS = -g -fsanitize=address -pthread
 BIN_DIR = src/.bin
 
 HEADER_FILES = header_files 
 
-CHECKERS = src/parser/checkers
-
 PARSING_FILE = src/parser/parsing.c \
-	$(CHECKERS)/is_number_checker.c \
-	$(CHECKERS)/scheduler_checker.c \
+				src/parser/checkers.c
 
 SRC = $(PARSING_FILE) \
 		src/main.c \
@@ -18,13 +14,9 @@ SRC = $(PARSING_FILE) \
 		src/routine/coder_routine/coder_routine.c \
 		src/routine/coder_routine/coder_routine_utils.c \
 		src/routine/coder_routine/coder_routine_utils_2.c \
-		src/routine/coder_routine/scheduler/queue.c \
-		src/routine/coder_routine/scheduler/edf.c \
-		src/routine/coder_routine/scheduler/fifo.c \
+		src/routine/coder_routine/queue.c \
 		src/routine/monitoring_routine/monitoring_routine.c \
-		src/init_files/monitor_init.c \
-		src/init_files/coder_init.c \
-		src/init_files/dongle_init.c 
+		src/init.c
 
 OBJ = $(patsubst %.c, $(BIN_DIR)/%.o , $(SRC))
 

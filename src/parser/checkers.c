@@ -1,31 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   queue.c                                            :+:      :+:    :+:   */
+/*   is_number_checker.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/08/11 17:52:16 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/18 17:49:20 by yriffard         ###   ########.fr       */
+/*   Created: 2026/06/23 10:05:25 by yriffard          #+#    #+#             */
+/*   Updated: 2026/08/20 16:01:42 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "coder.h"
+#include "parsing.h"
 
-void	scheduler_choose_and_update(t_coder *coder)
+int	is_number_checker(char *argv)
 {
-	if (strcmp(coder->monitor->scheduler, "edf") == 0)
+	int	i;
+
+	i = 0;
+	while (argv[i])
 	{
-		edf_queue(coder);
-		return ;
+		if (argv[i] < '0' || argv[i] > '9')
+			return (1);
+		i++;
 	}
-	fifo_queue(coder);
+	return (0);
 }
 
-int	is_schedule(t_coder *coder, t_dongle *first_dongle, t_dongle *second_dongle)
+int	scheduler_checker(char *argv)
+
 {
-	if ((first_dongle->queue[1] == coder->id)
-		&& (second_dongle->queue[1] == coder->id))
+	if (strcmp(argv, "fifo") == 0 || strcmp(argv, "edf") == 0)
 		return (0);
 	return (1);
 }

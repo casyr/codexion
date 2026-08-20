@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/11 15:31:08 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/19 15:46:18 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/20 15:34:37 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	ft_usleep(long time_in_ms, t_monitoring *monitor)
 			break ;
 		}
 		pthread_mutex_unlock(&(monitor->monitor_mutex));
-		usleep(500);
+		usleep(200);
 	}
 }
 
@@ -57,4 +57,10 @@ void	coder_set_finish(t_coder *coder)
 	coder->monitor->finished_coders_nb += 1;
 	coder->status = "FINISH";
 	pthread_mutex_unlock(&(coder->monitor->monitor_mutex));
+}
+
+void	coder_bump(t_coder *coder)
+{
+	if (coder->id % 2 == 0)
+		usleep(200);
 }

@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/25 16:04:18 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/19 15:40:50 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/20 15:25:40 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,25 @@
 void	coder_compiling(t_coder *coder, int time_to_compile,
 	t_dongle *first_dongle, t_dongle *second_dongle)
 {
-	pthread_mutex_lock(&(coder->monitor->monitor_mutex));
-	coder->last_compile = ft_get_time();
-	pthread_mutex_unlock(&(coder->monitor->monitor_mutex));
+	long	time;
+
+	time = ft_get_time();
 	print_log("is compiling", coder);
 	ft_usleep(time_to_compile, coder->monitor);
 	pthread_mutex_lock(&(coder->monitor->monitor_mutex));
+	coder->last_compile = time;
 	coder->compile_count++;
 	coder->monitor->total_compile_counter++;
-	coder->monitor->last_dongle_release = ft_get_time();
-	coder->left_dongle->last_release = ft_get_time();
-	coder->right_dongle->last_release = ft_get_time();
+	coder->monitor->last_dongle_release = time;
+	coder->left_dongle->last_release = time;
+	coder->right_dongle->last_release = time;
+	leave_dongle_queue(coder->left_dongle, coder->id);
+	leave_dongle_queue(coder->right_dongle, coder->id);
 	first_dongle->is_free = true;
 	second_dongle->is_free = true;
 	pthread_mutex_unlock(&(coder->monitor->monitor_mutex));
+	pthread_mutex_unlock(&(first_dongle->dongle_mutex));
+	pthread_mutex_unlock(&(second_dongle->dongle_mutex));
 }
 
 void	coder_action(t_coder *coder, t_dongle *first_dongle,
@@ -118,7 +123,6 @@ void	*coder_routine(void *v_coder)
 			pthread_mutex_unlock(&(coder->monitor->monitor_mutex));
 			return (NULL);
 		}
-		// printf("coder %i is waiting\n", coder->id);
 		pthread_cond_wait(&(coder->monitor->monitor_cond),
 			&(coder->monitor->monitor_mutex));
 	}

@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/13 16:13:43 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/19 14:56:35 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/20 16:26:39 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ typedef struct monitor
 	int				time_to_refactor;
 	int				time_to_debug;
 	int				dongle_cooldown;
-	long			time_to_burnout;
+	int				time_to_burnout;
 
 	char			*scheduler;
 	char			*status;
@@ -58,12 +58,9 @@ typedef struct monitor
 void			*monitoring_routine(void *monitor);
 void			print_log(char *string, t_coder *coder);
 
-int				monitoring_th_creation(t_monitoring *monitor);
 int				coder_th_creation(t_monitoring *monitor);
-int				monitor_thread_join(pthread_t monitoring_th);
-void			*monitoring_init(char **argv, t_dongle *dongle_list,
+void			*monitoring_init(char **argv,
 					long start_time, t_monitoring *monitor);
 long			ft_get_time(void);
-int				coder_are_ready(t_coder *coder_list, int coder_nb);
 
 #endif
