@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/25 16:04:18 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/20 18:07:22 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/20 19:18:06 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,9 @@ void	coder_compiling(t_coder *coder, int time_to_compile,
 
 	time = ft_get_time();
 	print_log("is compiling", coder);
+	pthread_mutex_lock(&(coder->monitor->monitor_mutex));
 	coder->last_compile = time;
+	pthread_mutex_unlock(&(coder->monitor->monitor_mutex));
 	ft_usleep(time_to_compile, coder->monitor);
 	pthread_mutex_lock(&(coder->monitor->monitor_mutex));
 	coder->compile_count++;

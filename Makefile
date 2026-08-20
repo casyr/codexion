@@ -1,6 +1,6 @@
 NAME = codexion
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -pthread -MMD -MP -ofast
+CFLAGS = -Wall -Wextra -Werror -pthread -MMD -MP -ofast -g
 BIN_DIR = src/.bin
 
 HEADER_FILES = header_files 

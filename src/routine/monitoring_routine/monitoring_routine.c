@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/25 16:02:13 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/20 18:05:48 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/20 19:21:30 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,9 @@ void	*monitoring_routine(void *monitoring)
 		pthread_mutex_unlock(&(monitor->monitor_mutex));
 		usleep(200);
 	}
+	pthread_mutex_lock(&(monitor->monitor_mutex));
 	pthread_cond_broadcast(&(monitor->monitor_cond));
+	pthread_mutex_unlock(&(monitor->monitor_mutex));
 	monitoring_loop(monitor);
 	return (NULL);
 }
