@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/25 16:04:18 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/20 15:25:40 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/20 18:07:22 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,19 @@ void	coder_compiling(t_coder *coder, int time_to_compile,
 	t_dongle *first_dongle, t_dongle *second_dongle)
 {
 	long	time;
+	long	release_time;
 
 	time = ft_get_time();
 	print_log("is compiling", coder);
+	coder->last_compile = time;
 	ft_usleep(time_to_compile, coder->monitor);
 	pthread_mutex_lock(&(coder->monitor->monitor_mutex));
-	coder->last_compile = time;
 	coder->compile_count++;
 	coder->monitor->total_compile_counter++;
-	coder->monitor->last_dongle_release = time;
-	coder->left_dongle->last_release = time;
-	coder->right_dongle->last_release = time;
+	release_time = ft_get_time();
+	coder->monitor->last_dongle_release = release_time;
+	coder->left_dongle->last_release = release_time;
+	coder->right_dongle->last_release = release_time;
 	leave_dongle_queue(coder->left_dongle, coder->id);
 	leave_dongle_queue(coder->right_dongle, coder->id);
 	first_dongle->is_free = true;

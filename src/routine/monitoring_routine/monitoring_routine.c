@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/25 16:02:13 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/20 15:40:59 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/20 18:05:48 by yriffard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	monitoring_loop(t_monitoring *monitor)
 			break ;
 		}
 		pthread_mutex_unlock(&(monitor->monitor_mutex));
-		usleep(200);
+		usleep(100);
 	}
 }
 
