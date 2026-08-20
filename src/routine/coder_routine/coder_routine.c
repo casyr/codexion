@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   coder_routine.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yriffard <yriffard@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/25 16:04:18 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/20 19:18:06 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/20 21:51:52 by yriffard         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,12 +113,6 @@ void	*coder_routine(void *v_coder)
 
 	coder = (t_coder *)v_coder;
 	pthread_mutex_lock(&(coder->monitor->monitor_mutex));
-	if (coder->monitor->coders_nb == 1)
-	{
-		coder->monitor->status = "BURNOUT";
-		pthread_mutex_unlock(&(coder->monitor->monitor_mutex));
-		return (NULL);
-	}
 	coder->status = "READY";
 	while (strcmp(coder->monitor->status, "READY") != 0)
 	{

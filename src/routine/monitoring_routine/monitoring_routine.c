@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   monitoring_routine.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yriffard <yriffard@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/25 16:02:13 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/20 19:21:30 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/20 21:44:36 by yriffard         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	burn_out_loop_checker(t_monitoring *monitor, long time)
 	while (i < monitor->coders_nb)
 	{
 		if ((time - monitor->coder_list[i].last_compile)
-			> monitor->time_to_burnout || monitor->coders_nb == 1)
+			> monitor->time_to_burnout)
 		{
 			monitor->status = "BURNOUT";
 			pthread_mutex_lock(&(monitor->print_mutex));

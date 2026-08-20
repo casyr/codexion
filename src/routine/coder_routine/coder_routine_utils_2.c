@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   coder_routine_utils_2.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yriffard <yriffard@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yriffard <yriffard@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/13 14:13:33 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/20 18:01:07 by yriffard         ###   ########.fr       */
+/*   Updated: 2026/08/20 21:53:28 by yriffard         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,8 @@ void	leave_dongle_queue(t_dongle *dongle, int coder_id)
 int	are_available_cond(t_dongle *first_dongle, t_dongle *second_dongle,
 	t_coder *coder)
 {
-	if (coder->monitor->total_compile_counter == 0)
+	if (coder->monitor->total_compile_counter == 0
+		&& coder->left_dongle != coder->right_dongle)
 	{
 		return (coder->left_dongle->is_free == true
 			&& coder->right_dongle->is_free == true
@@ -73,6 +74,8 @@ int	are_available_cond(t_dongle *first_dongle, t_dongle *second_dongle,
 int	dongles_are_available(t_dongle *first_dongle, t_dongle *second_dongle,
 	t_coder *coder)
 {
+	if (first_dongle == second_dongle)
+		return (1);
 	pthread_mutex_lock(&(first_dongle->dongle_mutex));
 	pthread_mutex_lock(&(second_dongle->dongle_mutex));
 	pthread_mutex_lock(&(coder->monitor->monitor_mutex));
