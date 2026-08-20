@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/25 16:04:18 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/20 21:56:31 by yriffard         ###   ########lyon.fr   */
+/*   Updated: 2026/08/20 23:07:35 by yriffard         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,15 +114,16 @@ void	*coder_routine(void *v_coder)
 	coder = (t_coder *)v_coder;
 	pthread_mutex_lock(&(coder->monitor->monitor_mutex));
 	coder->status = "READY";
-	while (strcmp(coder->monitor->status, "READY") != 0)
+	while (strcmp(coder->monitor->status, "READY") != 0
+		&& strcmp(coder->monitor->status, "FAIL") != 0)
 	{
-		if (strcmp(coder->monitor->status, "BURNOUT") == 0)
-		{
-			pthread_mutex_unlock(&(coder->monitor->monitor_mutex));
-			return (NULL);
-		}
 		pthread_cond_wait(&(coder->monitor->monitor_cond),
 			&(coder->monitor->monitor_mutex));
+	}
+	if (strcmp(coder->monitor->status, "READY") != 0)
+	{
+		pthread_mutex_unlock(&(coder->monitor->monitor_mutex));
+		return (NULL);
 	}
 	pthread_mutex_unlock(&(coder->monitor->monitor_mutex));
 	coder_bump(coder);

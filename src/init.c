@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/05 11:01:45 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/20 21:56:38 by yriffard         ###   ########lyon.fr   */
+/*   Updated: 2026/08/20 23:06:25 by yriffard         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,13 +52,14 @@ int	coder_th_creation(t_monitoring *monitor)
 		if (pthread_create(&(monitor->coder_th[coder_index]), NULL,
 				&coder_routine, &(monitor->coder_list[coder_index])) != 0)
 		{
+			pthread_mutex_lock(&(monitor->monitor_mutex));
+			monitor->status = "FAIL";
 			printf("coder %i thread CREATION fails\n", coder_index);
-			pthread_mutex_lock(&(monitor->monitor_mutex));
-			monitor->status = "BURNOUT";
 			pthread_cond_broadcast(&(monitor->monitor_cond));
-			pthread_mutex_lock(&(monitor->monitor_mutex));
+			pthread_mutex_unlock(&(monitor->monitor_mutex));
 			while (--coder_index >= 0)
 				pthread_join(monitor->coder_th[coder_index], NULL);
+			pthread_join(monitor->monitor_th, NULL);
 			return (1);
 		}
 		coder_index++;

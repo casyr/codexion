@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/25 16:02:13 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/20 21:56:36 by yriffard         ###   ########lyon.fr   */
+/*   Updated: 2026/08/20 23:14:11 by yriffard         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,13 +71,14 @@ int	coder_are_ready(t_monitoring *monitor)
 	return (count == monitor->coders_nb);
 }
 
-void	burned_out_case(t_monitoring *monitor)
+void	*burned_out_case(t_monitoring *monitor)
 {
 	pthread_mutex_lock(&(monitor->print_mutex));
 	printf("%li %i burned out\n", (ft_get_time()
 			- monitor->start_time), monitor->coder_list[0].id);
 	pthread_mutex_unlock(&(monitor->print_mutex));
 	pthread_mutex_unlock(&(monitor->monitor_mutex));
+	return (NULL);
 }
 
 void	*monitoring_routine(void *monitoring)
@@ -88,23 +89,23 @@ void	*monitoring_routine(void *monitoring)
 	while (1)
 	{
 		pthread_mutex_lock(&(monitor->monitor_mutex));
+		if (strcmp(monitor->status, "FAIL") == 0)
+		{
+			pthread_mutex_unlock(&(monitor->monitor_mutex));
+			return (NULL);
+		}
 		if (coder_are_ready(monitor))
 		{
 			monitor->status = "READY";
+			pthread_cond_broadcast(&(monitor->monitor_cond));
 			pthread_mutex_unlock(&(monitor->monitor_mutex));
 			break ;
 		}
 		if (strcmp(monitor->status, "BURNOUT") == 0)
-		{
-			burned_out_case(monitor);
-			return (NULL);
-		}
+			return (burned_out_case(monitor));
 		pthread_mutex_unlock(&(monitor->monitor_mutex));
 		usleep(200);
 	}
-	pthread_mutex_lock(&(monitor->monitor_mutex));
-	pthread_cond_broadcast(&(monitor->monitor_cond));
-	pthread_mutex_unlock(&(monitor->monitor_mutex));
 	monitoring_loop(monitor);
 	return (NULL);
 }
