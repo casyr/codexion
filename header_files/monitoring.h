@@ -6,19 +6,21 @@
 /*   By: yriffard <yriffard@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/13 16:13:43 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/20 21:56:12 by yriffard         ###   ########lyon.fr   */
+/*   Updated: 2026/08/21 14:03:39 by yriffard         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MONITORING_H
 # define MONITORING_H
 
-# include "coder.h"
 # include <pthread.h>
 # include <stdlib.h>
 # include "sys/time.h"
 # include <string.h>
 # include <unistd.h>
+# include <stdio.h>
+# include "status.h"
+# include "coder.h"
 
 typedef struct coder	t_coder;
 typedef struct s_dongle	t_dongle;
@@ -38,7 +40,7 @@ typedef struct monitor
 	int				time_to_burnout;
 
 	char			*scheduler;
-	char			*status;
+	t_status		status;
 
 	int				finished_coders_nb;
 	int				total_compile_counter;

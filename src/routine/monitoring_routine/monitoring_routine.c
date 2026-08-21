@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/25 16:02:13 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/20 23:14:11 by yriffard         ###   ########lyon.fr   */
+/*   Updated: 2026/08/21 14:02:11 by yriffard         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	burn_out_loop_checker(t_monitoring *monitor, long time)
 		if ((time - monitor->coder_list[i].last_compile)
 			> monitor->time_to_burnout)
 		{
-			monitor->status = "BURNOUT";
+			monitor->status = BURNOUT;
 			pthread_mutex_lock(&(monitor->print_mutex));
 			printf("%li %i burned out\n",
 				time - monitor->start_time, monitor->coder_list[i].id);
@@ -40,12 +40,12 @@ void	monitoring_loop(t_monitoring *monitor)
 		pthread_mutex_lock(&(monitor->monitor_mutex));
 		if (monitor->finished_coders_nb >= monitor->coders_nb)
 		{
-			monitor->status = "FINISH";
+			monitor->status = FINISH;
 			pthread_mutex_unlock(&(monitor->monitor_mutex));
 			break ;
 		}
 		burn_out_loop_checker(monitor, ft_get_time());
-		if (strcmp(monitor->status, "BURNOUT") == 0)
+		if (monitor->status == BURNOUT)
 		{
 			pthread_mutex_unlock(&(monitor->monitor_mutex));
 			break ;
@@ -64,7 +64,7 @@ int	coder_are_ready(t_monitoring *monitor)
 	i = 0;
 	while (i < monitor->coders_nb)
 	{
-		if (strcmp(monitor->coder_list[i].status, "READY") == 0)
+		if (monitor->coder_list[i].status == READY)
 			count++;
 		i++;
 	}
@@ -89,19 +89,19 @@ void	*monitoring_routine(void *monitoring)
 	while (1)
 	{
 		pthread_mutex_lock(&(monitor->monitor_mutex));
-		if (strcmp(monitor->status, "FAIL") == 0)
+		if (monitor->status == FAIL)
 		{
 			pthread_mutex_unlock(&(monitor->monitor_mutex));
 			return (NULL);
 		}
 		if (coder_are_ready(monitor))
 		{
-			monitor->status = "READY";
+			monitor->status = READY;
 			pthread_cond_broadcast(&(monitor->monitor_cond));
 			pthread_mutex_unlock(&(monitor->monitor_mutex));
 			break ;
 		}
-		if (strcmp(monitor->status, "BURNOUT") == 0)
+		if (monitor->status == BURNOUT)
 			return (burned_out_case(monitor));
 		pthread_mutex_unlock(&(monitor->monitor_mutex));
 		usleep(200);

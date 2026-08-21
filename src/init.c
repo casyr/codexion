@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/05 11:01:45 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/20 23:06:25 by yriffard         ###   ########lyon.fr   */
+/*   Updated: 2026/08/21 12:36:05 by yriffard         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ t_coder	*coder_list_init(int coders_nb, t_dongle *dongle_list,
 		coder = &(coder_list[coder_index]);
 		coder->id = coder_index + 1;
 		coder->compile_count = 0;
-		coder->status = "init";
+		coder->status = INIT;
 		coder->right_dongle = &(dongle_list[coder_index]);
 		coder->monitor = monitor;
 		coder->last_compile = ft_get_time();
@@ -53,7 +53,7 @@ int	coder_th_creation(t_monitoring *monitor)
 				&coder_routine, &(monitor->coder_list[coder_index])) != 0)
 		{
 			pthread_mutex_lock(&(monitor->monitor_mutex));
-			monitor->status = "FAIL";
+			monitor->status = FAIL;
 			printf("coder %i thread CREATION fails\n", coder_index);
 			pthread_cond_broadcast(&(monitor->monitor_cond));
 			pthread_mutex_unlock(&(monitor->monitor_mutex));
@@ -84,7 +84,7 @@ void	*monitoring_init(char	**argv,
 	monitor->compiling_nb = atoi(argv[6]);
 	monitor->dongle_cooldown = atoi(argv[7]);
 	monitor->scheduler = argv[8];
-	monitor->status = "INIT";
+	monitor->status = INIT;
 	monitor->finished_coders_nb = 0;
 	monitor->total_compile_counter = 0;
 	pthread_mutex_init(&(monitor->monitor_mutex), NULL);

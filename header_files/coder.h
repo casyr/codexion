@@ -6,23 +6,24 @@
 /*   By: yriffard <yriffard@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/13 16:09:14 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/20 21:56:02 by yriffard         ###   ########lyon.fr   */
+/*   Updated: 2026/08/21 13:59:12 by yriffard         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CODER_H
 # define CODER_H
 
-# include "monitoring.h"
 # include "dongle.h"
 # include <pthread.h>
-# include "stdio.h"
+# include "status.h"
+# include "monitoring.h"
+# include <stdio.h>
 
 typedef struct monitor	t_monitoring;
 
 typedef struct coder
 {
-	char			*status;
+	t_status		status;
 	int				id;
 	t_monitoring	*monitor;
 	t_dongle		*left_dongle;

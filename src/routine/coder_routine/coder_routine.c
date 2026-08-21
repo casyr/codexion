@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/25 16:04:18 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/21 12:29:39 by yriffard         ###   ########lyon.fr   */
+/*   Updated: 2026/08/21 14:05:48 by yriffard         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,10 @@ void	coder_compiling(t_coder *coder, int time_to_compile,
 void	coder_action(t_coder *coder, t_dongle *first_dongle,
 		t_dongle *second_dongle)
 {
-	int	time_to_compile;
-	int	time_to_debug;
-	int	time_to_refactor;
+	int		time_to_compile;
+	int		time_to_debug;
+	int		time_to_refactor;
+	long	time;
 
 	pthread_mutex_lock(&(coder->monitor->monitor_mutex));
 	time_to_compile = coder->monitor->time_to_compile;
@@ -52,6 +53,7 @@ void	coder_action(t_coder *coder, t_dongle *first_dongle,
 	time_to_refactor = coder->monitor->time_to_refactor;
 	pthread_mutex_unlock(&(coder->monitor->monitor_mutex));
 	pthread_mutex_lock(&(coder->monitor->print_mutex));
+	time = ft_get_time() - coder->monitor->start_time;
 	printf("%li %i %s\n", time, coder->id, "has taken a dongle");
 	printf("%li %i %s\n", time, coder->id, "has taken a dongle");
 	printf("%li %i %s\n", time, coder->id, "is compiling");
@@ -71,7 +73,7 @@ void	coder_handling(t_coder *coder)
 	t_dongle	*second_dongle;
 
 	pthread_mutex_lock(&(coder->monitor->monitor_mutex));
-	if (strcmp(coder->status, "FINISH") == 0)
+	if (coder->status == FINISH)
 	{
 		pthread_mutex_unlock(&(coder->monitor->monitor_mutex));
 		usleep(200);
@@ -97,8 +99,8 @@ void	coder_routine_start(t_coder *coder)
 	while (1)
 	{
 		pthread_mutex_lock(&(coder->monitor->monitor_mutex));
-		if (strcmp(coder->monitor->status, "BURNOUT") == 0
-			|| strcmp(coder->monitor->status, "FINISH") == 0)
+		if (coder->monitor->status == BURNOUT
+			|| coder->monitor->status == FINISH)
 		{
 			pthread_mutex_unlock(&(coder->monitor->monitor_mutex));
 			break ;
@@ -115,14 +117,14 @@ void	*coder_routine(void *v_coder)
 
 	coder = (t_coder *)v_coder;
 	pthread_mutex_lock(&(coder->monitor->monitor_mutex));
-	coder->status = "READY";
-	while (strcmp(coder->monitor->status, "READY") != 0
-		&& strcmp(coder->monitor->status, "FAIL") != 0)
+	coder->status = READY;
+	while (coder->monitor->status != READY
+		&& coder->monitor->status != FAIL)
 	{
 		pthread_cond_wait(&(coder->monitor->monitor_cond),
 			&(coder->monitor->monitor_mutex));
 	}
-	if (strcmp(coder->monitor->status, "READY") != 0)
+	if (coder->monitor->status != READY)
 	{
 		pthread_mutex_unlock(&(coder->monitor->monitor_mutex));
 		return (NULL);

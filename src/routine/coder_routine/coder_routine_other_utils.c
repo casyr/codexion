@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   coder_routine_utils_2.c                            :+:      :+:    :+:   */
+/*   coder_routine_other_utils.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yriffard <yriffard@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/13 14:13:33 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/20 21:56:25 by yriffard         ###   ########lyon.fr   */
+/*   Updated: 2026/08/21 12:36:33 by yriffard         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	print_log(char *string, t_coder *coder)
 	long	time;
 
 	pthread_mutex_lock(&(coder->monitor->monitor_mutex));
-	if (strcmp(coder->monitor->status, "BURNOUT") == 0)
+	if (coder->monitor->status == BURNOUT)
 	{
 		pthread_mutex_unlock(&(coder->monitor->monitor_mutex));
 		return ;

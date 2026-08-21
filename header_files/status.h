@@ -1,29 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.h                                             :+:      :+:    :+:   */
+/*   status.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yriffard <yriffard@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/08/13 16:13:08 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/21 12:34:25 by yriffard         ###   ########lyon.fr   */
+/*   Created: 2026/08/21 12:55:13 by yriffard          #+#    #+#             */
+/*   Updated: 2026/08/21 13:04:27 by yriffard         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MAIN_H
-# define MAIN_H
-# include <stdlib.h>
-# include <stdio.h>
-# include <unistd.h>
-# include <pthread.h>
-# include <sys/time.h>
+#ifndef STATUS_H
+# define STATUS_H
 
-# include "parsing.h"
-# include "monitoring.h"
-# include "coder.h"
-# include "dongle.h"
+typedef enum e_status
+{
+	INIT,
+	FINISH,
+	BURNOUT,
+	READY,
+	FAIL
+}	t_status;
 
-void	free_all(t_monitoring *monitor);
-void	destroy_all(t_monitoring *monitor);
-void	destroy_and_free(t_monitoring *monitor);
 #endif

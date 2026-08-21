@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/11 17:52:16 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/20 21:56:33 by yriffard         ###   ########lyon.fr   */
+/*   Updated: 2026/08/21 12:40:38 by yriffard         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	edf_queue(t_dongle *dongle, t_coder *coder)
 	if (other_id <= 0 || other_id == coder->id)
 		return (1);
 	other = &coder->monitor->coder_list[other_id - 1];
-	if (strcmp(other->status, "FINISH") == 0)
+	if (other->status == FINISH)
 		return (1);
 	coder_deadline = coder->last_compile + coder->monitor->time_to_burnout;
 	other_deadline = other->last_compile + other->monitor->time_to_burnout;
