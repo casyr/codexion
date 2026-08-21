@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/25 16:04:18 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/21 14:05:48 by yriffard         ###   ########lyon.fr   */
+/*   Updated: 2026/08/21 14:13:40 by yriffard         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ void	coder_compiling(t_coder *coder, int time_to_compile,
 	coder->compile_count++;
 	coder->monitor->total_compile_counter++;
 	release_time = ft_get_time();
-	coder->monitor->last_dongle_release = release_time;
 	coder->left_dongle->last_release = release_time;
 	coder->right_dongle->last_release = release_time;
 	leave_dongle_queue(coder->left_dongle, coder->id);

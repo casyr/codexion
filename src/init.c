@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/05 11:01:45 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/21 12:36:05 by yriffard         ###   ########lyon.fr   */
+/*   Updated: 2026/08/21 14:13:37 by yriffard         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,6 @@ int	coder_th_creation(t_monitoring *monitor)
 void	*monitoring_init(char	**argv,
 	long start_time, t_monitoring *monitor)
 {
-	monitor->last_compile = ft_get_time();
-	monitor->last_dongle_release = ft_get_time();
 	monitor->start_time = start_time;
 	monitor->dongle_list = NULL;
 	monitor->coder_list = NULL;

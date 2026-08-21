@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/13 16:13:43 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/21 14:03:39 by yriffard         ###   ########lyon.fr   */
+/*   Updated: 2026/08/21 14:13:50 by yriffard         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,7 @@ typedef struct s_dongle	t_dongle;
 
 typedef struct monitor
 {
-	long			last_compile;
 	long			start_time;
-	long			last_dongle_release;
 
 	int				compiling_nb;
 	int				coders_nb;
