@@ -6,7 +6,7 @@
 /*   By: yriffard <yriffard@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/25 16:04:18 by yriffard          #+#    #+#             */
-/*   Updated: 2026/08/20 23:07:35 by yriffard         ###   ########lyon.fr   */
+/*   Updated: 2026/08/21 12:29:39 by yriffard         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ void	coder_compiling(t_coder *coder, int time_to_compile,
 	long	release_time;
 
 	time = ft_get_time();
-	print_log("is compiling", coder);
 	pthread_mutex_lock(&(coder->monitor->monitor_mutex));
 	coder->last_compile = time;
 	pthread_mutex_unlock(&(coder->monitor->monitor_mutex));
@@ -52,8 +51,11 @@ void	coder_action(t_coder *coder, t_dongle *first_dongle,
 	time_to_debug = coder->monitor->time_to_debug;
 	time_to_refactor = coder->monitor->time_to_refactor;
 	pthread_mutex_unlock(&(coder->monitor->monitor_mutex));
-	print_log("has taken a dongle", coder);
-	print_log("has taken a dongle", coder);
+	pthread_mutex_lock(&(coder->monitor->print_mutex));
+	printf("%li %i %s\n", time, coder->id, "has taken a dongle");
+	printf("%li %i %s\n", time, coder->id, "has taken a dongle");
+	printf("%li %i %s\n", time, coder->id, "is compiling");
+	pthread_mutex_unlock(&(coder->monitor->print_mutex));
 	coder_compiling(coder, time_to_compile, first_dongle, second_dongle);
 	print_log("is debugging", coder);
 	ft_usleep(time_to_debug, coder->monitor);
